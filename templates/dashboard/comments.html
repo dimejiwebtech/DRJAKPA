@@ -1,0 +1,204 @@
+{% extends 'dashboard_base.html' %} 
+
+{% load static %} 
+
+{% block title %}Comments | dr.Jakpa{% endblock %} 
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+  <div>
+    <h1 class="text-2xl font-black text-royal uppercase tracking-tighter">Comments</h1>
+  </div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-xl mb-8 overflow-hidden shadow-sm">
+  <div class="flex flex-wrap gap-2 p-2 bg-slate-50/50">
+    <a href="?status=all" class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if current_status == 'all' %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}">
+      All Comments <span class="ml-1 opacity-60">({{ all_count }})</span>
+    </a>
+    <a href="?status=mine" class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if current_status == 'mine' %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}">
+      Mine <span class="ml-1 opacity-60">({{ mine_count }})</span>
+    </a>
+    <a href="?status=pending" class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if current_status == 'pending' %}bg-orange-100 text-orange-600{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}">
+      Pending <span class="ml-1 opacity-60">({{ pending_count }})</span>
+    </a>
+    <a href="?status=approved" class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if current_status == 'approved' %}bg-green-100 text-green-600{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}">
+      Approved <span class="ml-1 opacity-60">({{ approved_count }})</span>
+    </a>
+  </div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl p-6 mb-8 shadow-sm">
+  <form method="post" action="{% url 'bulk_comment_action' %}" id="bulk-form" class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+    {% csrf_token %}
+    <div class="flex items-center gap-3 w-full lg:w-auto">
+      <select name="bulk_action" class="flex-1 lg:flex-none bg-slate-50 border border-slate-200 text-royal font-bold rounded-lg px-4 py-2.5 text-[10px] uppercase tracking-widest focus:border-royal outline-none">
+        <option value="">Bulk Actions</option>
+        <option value="approve">Approve Selected</option>
+        <option value="unapprove">Unapprove Selected</option>
+        <option value="delete">Delete Permanently</option>
+      </select>
+      <button type="submit" class="px-5 py-2.5 bg-royal text-white rounded-lg transition-all text-[10px] font-black uppercase tracking-widest">
+        Apply
+      </button>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="flex flex-col sm:flex-row items-center gap-4 lg:gap-6 w-full lg:w-auto">
+      <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+        Viewing <span class="text-royal">{{ page_obj.start_index }}-{{ page_obj.end_index }}</span> of {{ page_obj.paginator.count }}
+      </span>
+      <div class="flex gap-2">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&status={{ current_status }}" class="w-9 h-9 border border-slate-200 text-royal rounded-lg flex items-center justify-center transition-all">
+          <i data-lucide="chevron-left" class="w-4 h-4"></i>
+        </a>
+        {% endif %}
+        <div class="px-4 py-2 bg-white border border-slate-200 text-[10px] font-black text-royal rounded-lg flex items-center">
+          {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </div>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&status={{ current_status }}" class="w-9 h-9 border border-slate-200 text-royal rounded-lg flex items-center justify-center transition-all">
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </form>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm mb-10 overflow-hidden">
+  <div class="w-full">
+    <table class="w-full text-left table-fixed sm:table-auto">
+      <thead class="bg-slate-50 border-b border-slate-200 hidden sm:table-header-group">
+        <tr>
+          <th class="w-12 px-6 py-4">
+            <input type="checkbox" id="select-all" class="rounded border-slate-300 text-royal focus:ring-royal" />
+          </th>
+          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-1/4">Author Profile</th>
+          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Comment</th>
+          <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hidden lg:table-cell w-1/5">Response To</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        {% for comment in comments %}
+        <tr class="comment-row flex flex-col sm:table-row transition-colors {% if not comment.approved %}border-l-4 border-accent{% endif %}" data-comment-id="{{ comment.id }}">
+          <td class="px-6 py-4 sm:py-5 align-top sm:w-12 border-b sm:border-0 border-slate-50 bg-slate-50/30 sm:bg-transparent">
+            <input type="checkbox" name="comment_ids" value="{{ comment.id }}" form="bulk-form" class="comment-checkbox rounded border-slate-300 text-royal focus:ring-royal" />
+          </td>
+          
+          <td class="px-6 py-4 sm:py-5 align-top">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 bg-royal/10 text-royal rounded-full flex items-center justify-center font-bold text-xs shrink-0 hidden xs:flex">
+                {{ comment.name|first|upper }}
+              </div>
+              <div class="min-w-0">
+                <div class="text-[11px] font-black text-royal uppercase tracking-tight truncate">{{ comment.name }}</div>
+                <div class="text-[9px] text-slate-400 font-bold uppercase truncate">{{ comment.email }}</div>
+                {% if not comment.approved %}
+                <span class="inline-block px-2 py-0.5 text-[8px] bg-orange-100 text-accent rounded mt-2 font-black uppercase tracking-widest">Pending</span>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+
+          <td class="px-6 py-4 sm:py-5">
+            <div class="text-xs text-slate-600 leading-relaxed mb-2 break-words">
+              {{ comment.body }}
+            </div>
+            <div class="text-[9px] text-slate-300 font-bold uppercase tracking-widest mb-4">
+              Submitted: {{ comment.created_on|date:"M j, Y \a\t g:i A" }}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] font-black uppercase tracking-widest action-links">
+              {% if comment.approved %}
+              <a href="{% url 'comment_unapprove' comment.id %}" class="text-accent">Unapprove</a>
+              {% else %}
+              <a href="{% url 'comment_approve' comment.id %}" class="text-green-600">Approve Entry</a>
+              {% endif %}
+              <span class="text-slate-200 hidden xs:inline">|</span>
+              {% if comment.approved %}
+              <button class="text-royal reply-btn" data-comment-id="{{ comment.id }}">Reply</button>
+              <span class="text-slate-200 hidden xs:inline">|</span>
+              {% endif %}
+              <button class="text-royal edit-btn" data-comment-id="{{ comment.id }}" data-comment-body="{{ comment.body }}">Edit</button>
+              <span class="text-slate-200 hidden xs:inline">|</span>
+              <a href="{% url 'comment_delete' comment.id %}" class="text-red-500" onclick="return confirm('Purge this comment permanently?')">Delete</a>
+            </div>
+
+            <div class="reply-form-{{ comment.id }} hidden mt-6 p-4 sm:p-6 bg-slate-50 rounded-2xl border border-slate-100">
+              <form method="post" action="{% url 'comment_reply' comment.id %}">
+                {% csrf_token %}
+                <textarea name="reply_text" class="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs text-slate-600 focus:border-royal outline-none placeholder-slate-300 leading-relaxed resize-none transition-all" rows="3" placeholder="Compose your professional response..."></textarea>
+                <div class="mt-4 flex flex-wrap gap-3">
+                  <button type="submit" class="px-6 py-2.5 bg-royal text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-royal/90">
+                    Post Response
+                  </button>
+                  <button type="button" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-lg cancel-reply" data-comment-id="{{ comment.id }}">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </td>
+
+          <td class="px-6 py-5 align-top hidden lg:table-cell">
+            <a href="{% url 'edit_post' comment.post.pk %}" class="text-[11px] font-bold text-royal hover:text-accent uppercase tracking-tight leading-snug block">
+              {{ comment.post.title|truncatechars:40 }}
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="px-6 py-24 text-center">
+            <i data-lucide="message-square-off" class="w-16 h-16 text-slate-100 mx-auto mb-4"></i>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">No comments found.</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="edit-modal" class="fixed inset-0 bg-royal/40 backdrop-blur-sm hidden z-[200] flex items-center justify-center p-4">
+  <div class="bg-white border border-slate-100 rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden">
+    <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+      <h3 class="text-xs font-black text-royal uppercase tracking-[0.2em]">Edit Comment</h3>
+    </div>
+    <form method="post" id="edit-form">
+      {% csrf_token %}
+      <div class="p-6 sm:p-8">
+        <textarea name="comment_body" id="edit-comment-body" class="w-full h-40 p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-600 focus:border-royal outline-none transition-all placeholder-slate-300 leading-relaxed resize-none" placeholder="Enter updated comment..."></textarea>
+      </div>
+      <div class="px-8 py-6 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-3">
+        <button type="button" id="cancel-edit" class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-royal">
+          Cancel
+        </button>
+        <button type="submit" class="px-8 py-3 bg-royal text-white rounded-lg text-[10px] font-black uppercase tracking-widest shadow-xl shadow-royal/10 hover:bg-royal/90">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %} 
+
+{% block scripts %}
+<script>
+  window.commentEditBaseUrl = "{% url 'comment_edit' 0 %}".replace('/0/', '/');
+</script>
+<script src="{% static 'js/dashboard/comments.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    const selectAll = document.getElementById('select-all');
+    if(selectAll) {
+      selectAll.addEventListener('change', function() {
+        document.querySelectorAll('.comment-checkbox').forEach(cb => cb.checked = this.checked);
+      });
+    }
+  });
+</script>
+{% endblock %}

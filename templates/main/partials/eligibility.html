@@ -1,0 +1,768 @@
+<section id="eligibility" class="py-24 bg-white border-y border-slate-200">
+  <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+    <div class="reveal-left">
+      <h2 class="text-3xl font-bold text-royal mb-6 leading-tight">
+        Can we help you Jakpa
+        <span class="text-accent italic font-black">Legitimately?</span>
+      </h2>
+      <p class="text-sm text-slate-500 mb-8 leading-relaxed">
+        Not every medical school or license is currently recognized. We use this
+        assessment to filter for candidates who have a statistically high chance
+        of success.
+      </p>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="p-6 bg-slate-50 rounded-lg">
+          <h4 class="font-bold text-royal text-sm mb-2">School Status</h4>
+          <p class="text-[11px] text-slate-400">
+            Instant check against the Anabin database.
+          </p>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-lg">
+          <h4 class="font-bold text-royal text-sm mb-2">License Type</h4>
+          <p class="text-[11px] text-slate-400">
+            Validating your home-country practice rights.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal-right bg-royal p-1 shadow-2xl rounded-2xl">
+      <div class="bg-white p-12 rounded-2xl">
+        <!-- Progress Bar -->
+        <div class="mb-8">
+          <div class="flex justify-between items-center mb-2">
+            <span
+              class="text-[10px] font-bold uppercase tracking-widest text-slate-400"
+              >Progress</span
+            >
+            <span
+              id="step-counter"
+              class="text-[10px] font-bold uppercase tracking-widest text-slate-400"
+              >Step 1 of 10</span
+            >
+          </div>
+          <div class="w-full bg-slate-200 rounded-full h-2">
+            <div
+              id="progress-bar"
+              class="bg-accent h-2 rounded-full transition-all duration-300"
+              style="width: 8.33%"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Question 1: MBBS Degree -->
+        <div id="q-1" class="quiz-step active">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >1</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Basic Qualification</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            Do you hold an MBBS/MD degree from a recognized medical school?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q1_has_degree', 'Yes', 2)"
+              class="quiz-option w-full text-left p-5 border border-slate-200 rounded hover:border-accent hover:bg-orange-50 font-semibold text-sm transition-all group"
+            >
+              Yes
+              <i
+                data-lucide="chevron-right"
+                class="w-4 h-4 float-right opacity-0 group-hover:opacity-100"
+              ></i>
+            </button>
+            <button
+              onclick="answerQuestion('q1_has_degree', 'No', 2)"
+              class="quiz-option w-full text-left p-5 border border-slate-200 rounded hover:border-accent hover:bg-orange-50 font-semibold text-sm transition-all group"
+            >
+              No
+              <i
+                data-lucide="chevron-right"
+                class="w-4 h-4 float-right opacity-0 group-hover:opacity-100"
+              ></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 2: Internship -->
+        <div id="q-2" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >2</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Internship</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            Have you completed your house job / internship?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q2_internship', 'Yes', 3)"
+              class="quiz-option"
+            >
+              Yes
+            </button>
+            <button
+              onclick="answerQuestion('q2_internship', 'No', 3)"
+              class="quiz-option"
+            >
+              No
+            </button>
+            <button
+              onclick="
+                answerQuestion('q2_internship', 'Currently completing', 3)
+              "
+              class="quiz-option"
+            >
+              Currently completing
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 3: MDCN License -->
+        <div id="q-3" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >3</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >License Status</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            Do you have a full medical license in Nigeria (MDCN)?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q3_mdcn_license', 'Yes', 4)"
+              class="quiz-option"
+            >
+              Yes
+            </button>
+            <button
+              onclick="answerQuestion('q3_mdcn_license', 'No', 4)"
+              class="quiz-option"
+            >
+              No
+            </button>
+            <button
+              onclick="answerQuestion('q3_mdcn_license', 'In process', 4)"
+              class="quiz-option"
+            >
+              In process
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 4: German Level -->
+        <div id="q-4" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >4</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Language Readiness</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            What is your current German level?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q4_german_level', 'None', 5)"
+              class="quiz-option"
+            >
+              No German yet
+            </button>
+            <button
+              onclick="answerQuestion('q4_german_level', 'A1', 5)"
+              class="quiz-option"
+            >
+              A1
+            </button>
+            <button
+              onclick="answerQuestion('q4_german_level', 'A2', 5)"
+              class="quiz-option"
+            >
+              A2
+            </button>
+            <button
+              onclick="answerQuestion('q4_german_level', 'B1', 5)"
+              class="quiz-option"
+            >
+              B1
+            </button>
+            <button
+              onclick="answerQuestion('q4_german_level', 'B2', 5)"
+              class="quiz-option"
+            >
+              B2
+            </button>
+            <button
+              onclick="answerQuestion('q4_german_level', 'C1', 5)"
+              class="quiz-option"
+            >
+              C1
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 5: FSP Preparation -->
+        <div id="q-5" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >5</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >FSP Preparation</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            Have you started preparation for the Fachsprachprüfung (FSP)?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q5_fsp_prep', 'Yes', 6)"
+              class="quiz-option"
+            >
+              Yes
+            </button>
+            <button
+              onclick="answerQuestion('q5_fsp_prep', 'No', 6)"
+              class="quiz-option"
+            >
+              No
+            </button>
+            <button
+              onclick="
+                answerQuestion('q5_fsp_prep', 'Not sure what that is', 6)
+              "
+              class="quiz-option"
+            >
+              Not sure what that is
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 6: Experience -->
+        <div id="q-6" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >6</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Work Experience</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            How many years of post-internship experience do you have?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q6_experience_years', '0-1 year', 7)"
+              class="quiz-option"
+            >
+              0–1 year
+            </button>
+            <button
+              onclick="answerQuestion('q6_experience_years', '1-3 years', 7)"
+              class="quiz-option"
+            >
+              1–3 years
+            </button>
+            <button
+              onclick="answerQuestion('q6_experience_years', '3-5 years', 7)"
+              class="quiz-option"
+            >
+              3–5 years
+            </button>
+            <button
+              onclick="answerQuestion('q6_experience_years', '5+ years', 7)"
+              class="quiz-option"
+            >
+              5+ years
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 7: Currently Practicing -->
+        <div id="q-7" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >7</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Current Practice</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            Are you currently practicing medicine?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="
+                answerQuestion(
+                  'q7_currently_practicing',
+                  'Yes (Public hospital)',
+                  8,
+                )
+              "
+              class="quiz-option"
+            >
+              Yes (Public hospital)
+            </button>
+            <button
+              onclick="
+                answerQuestion(
+                  'q7_currently_practicing',
+                  'Yes (Private hospital)',
+                  8,
+                )
+              "
+              class="quiz-option"
+            >
+              Yes (Private hospital)
+            </button>
+            <button
+              onclick="answerQuestion('q7_currently_practicing', 'No', 8)"
+              class="quiz-option"
+            >
+              No
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 8: Funds -->
+        <div id="q-8" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >8</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Financial Readiness</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            Do you have funds saved for relocation?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q8_funds', 'Yes (€5,000+)', 9)"
+              class="quiz-option"
+            >
+              Yes (Above €5,000 equivalent)
+            </button>
+            <button
+              onclick="answerQuestion('q8_funds', 'Partially saved', 9)"
+              class="quiz-option"
+            >
+              Partially saved
+            </button>
+            <button
+              onclick="answerQuestion('q8_funds', 'No', 9)"
+              class="quiz-option"
+            >
+              No
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 9: Timeline -->
+        <div id="q-9" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >9</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Timeline</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            When do you want to move to Germany?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerQuestion('q9_timeline', 'Within 6 months', 10)"
+              class="quiz-option"
+            >
+              Within 6 months
+            </button>
+            <button
+              onclick="answerQuestion('q9_timeline', '6-12 months', 10)"
+              class="quiz-option"
+            >
+              6–12 months
+            </button>
+            <button
+              onclick="answerQuestion('q9_timeline', '1-2 years', 10)"
+              class="quiz-option"
+            >
+              1–2 years
+            </button>
+            <button
+              onclick="answerQuestion('q9_timeline', 'Just exploring', 10)"
+              class="quiz-option"
+            >
+              Just exploring
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 10: Dependents -->
+        <div id="q-10" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >10</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Family Status</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-6">
+            Do you have dependents (spouse/children)?
+          </h4>
+          <div class="grid gap-3">
+            <button
+              onclick="answerAndSubmit('q10_dependents', 'Yes')"
+              class="quiz-option"
+            >
+              Yes
+            </button>
+            <button
+              onclick="answerAndSubmit('q10_dependents', 'No')"
+              class="quiz-option"
+            >
+              No
+            </button>
+          </div>
+        </div>
+
+        <!-- Lead Capture Form -->
+        <div id="q-11" class="quiz-step">
+          <div class="flex items-center gap-3 mb-8">
+            <span
+              class="w-8 h-8 rounded-full bg-royal text-white flex items-center justify-center text-xs font-bold"
+              >11</span
+            >
+            <span
+              class="text-[12px] font-bold uppercase tracking-widest text-slate-400"
+              >Contact Information</span
+            >
+          </div>
+          <h4 class="text-lg font-bold text-royal mb-4">
+            Enter your details to view your personalized results
+          </h4>
+          <p class="text-sm text-slate-500 mb-6">
+            We'll send you a detailed breakdown of your eligibility assessment.
+          </p>
+          <form id="contact-form" class="space-y-4">
+            <input
+              type="text"
+              id="full_name"
+              placeholder="Full Name"
+              required
+              class="w-full p-4 border border-slate-200 rounded-lg text-sm focus:border-accent focus:outline-none"
+            />
+            <input
+              type="email"
+              id="email"
+              placeholder="Email Address"
+              required
+              class="w-full p-4 border border-slate-200 rounded-lg text-sm focus:border-accent focus:outline-none"
+            />
+            <input
+              type="tel"
+              id="phone"
+              placeholder="Phone Number"
+              required
+              class="w-full p-4 border border-slate-200 rounded-lg text-sm focus:border-accent focus:outline-none"
+            />
+            <input
+              type="tel"
+              id="whatsapp"
+              placeholder="WhatsApp Number"
+              required
+              class="w-full p-4 border border-slate-200 rounded-lg text-sm focus:border-accent focus:outline-none"
+            />
+            <button
+              type="submit"
+              class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-4 px-10 rounded text-sm uppercase tracking-[.2em] transition-all shadow-lg shadow-orange-100"
+            >
+              View My Results
+            </button>
+          </form>
+        </div>
+
+        <!-- Results Page -->
+        <div id="q-result" class="quiz-step text-center py-6">
+          <div
+            id="category-badge"
+            class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <i data-lucide="check" class="w-8 h-8"></i>
+          </div>
+          <h4 id="result-title" class="text-xl font-bold text-royal mb-2"></h4>
+          <p id="result-score" class="text-3xl font-black text-accent mb-2"></p>
+          <p class="text-sm text-slate-400 mb-8">of migration readiness</p>
+
+          <!-- Strengths -->
+          <div id="strengths-section" class="text-left mb-6">
+            <h5 class="font-bold text-royal text-sm mb-3">
+              ✅ Your Strengths:
+            </h5>
+            <ul
+              id="strengths-list"
+              class="space-y-2 text-sm text-slate-600"
+            ></ul>
+          </div>
+
+          <!-- Weaknesses -->
+          <div id="weaknesses-section" class="text-left mb-8">
+            <h5 class="font-bold text-royal text-sm mb-3">
+              📋 Areas to Improve:
+            </h5>
+            <ul
+              id="weaknesses-list"
+              class="space-y-2 text-sm text-slate-600"
+            ></ul>
+          </div>
+
+          <!-- Recommended Package -->
+          <div class="bg-slate-50 p-6 rounded-lg mb-6">
+            <p
+              class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2"
+            >
+              Recommended for you
+            </p>
+            <p
+              id="recommended-package"
+              class="font-bold text-royal text-lg"
+            ></p>
+          </div>
+
+          <a
+            href="/bookings/"
+            class="inline-block bg-accent text-white font-bold py-4 px-10 rounded shadow-lg shadow-orange-200 text-sm hover:bg-orange-600 transition-all"
+          >
+            Book Strategy Call
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .quiz-step {
+    display: none;
+  }
+
+  .quiz-step.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  .quiz-option {
+    width: 100%;
+    text-align: left;
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .quiz-option:hover {
+    border-color: #f97316;
+    background-color: #fff7ed;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  // Store quiz answers
+  const quizData = {};
+
+  // Answer a question and move to next step
+  function answerQuestion(key, value, nextStep) {
+    quizData[key] = value;
+    goToStep(nextStep);
+  }
+
+  // Navigate to specific step
+  function goToStep(stepNumber) {
+    // Hide all steps
+    document.querySelectorAll('.quiz-step').forEach((step) => {
+      step.classList.remove('active');
+    });
+
+    // Show target step
+    const targetStep = document.getElementById(`q-${stepNumber}`);
+    if (targetStep) {
+      targetStep.classList.add('active');
+    }
+
+    // Update progress
+    const progress = (stepNumber / 10) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+    document.getElementById('step-counter').textContent =
+      `Step ${stepNumber} of 10`;
+
+    // Refresh lucide icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  }
+
+  // Answer final question and submit directly
+  async function answerAndSubmit(key, value) {
+    quizData[key] = value;
+
+    // Use anonymous data for submission
+    quizData.full_name = 'Anonymous User';
+    quizData.email = 'anonymous@drjakpa.com';
+    quizData.phone = 'N/A';
+    quizData.whatsapp = 'N/A';
+
+    // Submit to backend
+    try {
+      const response = await fetch('/api/eligibility-submit/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quizData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        displayResults(result);
+        goToStep('result');
+      } else {
+        alert('An error occurred. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+    }
+  }
+
+  // Handle contact form submission
+  document.addEventListener('DOMContentLoaded', function () {
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        // Get contact info
+        quizData.full_name = document.getElementById('full_name').value;
+        quizData.email = document.getElementById('email').value;
+        quizData.phone = document.getElementById('phone').value;
+        quizData.whatsapp = document.getElementById('whatsapp').value;
+
+        // Submit to backend
+        try {
+          const response = await fetch('/api/eligibility-submit/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(quizData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            displayResults(result);
+            goToStep('result');
+          } else {
+            alert('An error occurred. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred. Please try again.');
+        }
+      });
+    }
+  });
+
+  // Display results
+  function displayResults(result) {
+    // Set category badge color
+    const badge = document.getElementById('category-badge');
+    const colorMap = {
+      green: 'bg-green-100 text-green-600',
+      yellow: 'bg-yellow-100 text-yellow-600',
+      orange: 'bg-orange-100 text-orange-600',
+      red: 'bg-red-100 text-red-600',
+    };
+    badge.className = `w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ${colorMap[result.color]}`;
+
+    // Set title and score
+    document.getElementById('result-title').textContent = result.category;
+    document.getElementById('result-score').textContent = result.score + '%';
+
+    // Display strengths
+    const strengthsList = document.getElementById('strengths-list');
+    strengthsList.innerHTML = '';
+    result.strengths.forEach((strength) => {
+      const li = document.createElement('li');
+      li.textContent = '• ' + strength;
+      strengthsList.appendChild(li);
+    });
+
+    // Display weaknesses
+    const weaknessesList = document.getElementById('weaknesses-list');
+    weaknessesList.innerHTML = '';
+    if (result.weaknesses.length > 0) {
+      result.weaknesses.forEach((weakness) => {
+        const li = document.createElement('li');
+        li.textContent = '• ' + weakness;
+        weaknessesList.appendChild(li);
+      });
+    } else {
+      document.getElementById('weaknesses-section').style.display = 'none';
+    }
+
+    // Set recommended package
+    document.getElementById('recommended-package').textContent = result.package;
+  }
+</script>

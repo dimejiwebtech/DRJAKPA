@@ -1,0 +1,37 @@
+# Python
+_pycache_/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+env/
+venv/
+*.log
+
+secrets/
+
+# Django
+/static/
+media/
+*.pot
+doclumina_data.sql
+
+# Environment & Secrets
+.env
+*.env
+
+# Node / Tailwind
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+.pnpm-debug.log
+
+# IDE
+.vscode/
+.idea/
+
+#Ignore secrets
+secrets/
+*.json
+*.env

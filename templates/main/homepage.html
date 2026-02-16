@@ -1,0 +1,299 @@
+{% extends 'base.html' %} 
+
+{% load static %} 
+
+{% block title %}Dr. Jakpa | Professional Medical Migration to Germany{% endblock %} 
+
+{% block description %}Navigate your German medical licensing, language proficiency, and hospital placement through a single, doctor-led firm. Expert Approbation support for Nigerian doctors.{% endblock %} 
+
+{% block keywords %}medical migration Germany, Nigerian doctors Germany, Approbation Germany, medical licensing support, FSP exam, German language training, hospital placement{% endblock %} 
+
+{% block canonical %}https://drjakpa.com{% endblock %} 
+
+{% block og_title %}Dr. Jakpa - Professional Medical Migration to Germany{% endblock %} 
+
+{% block og_description %}Expert guidance for Nigerian doctors seeking German Approbation. Professional licensing, language training, and hospital placement support.{% endblock %} 
+
+{% block content %}
+
+<header class="relative h-[70vh] min-h-[600px] flex items-center pt-20">
+  <div class="absolute inset-0">
+    <img
+      src="{% static 'images/home.webp' %}"
+      alt="Clinical Background"
+      class="w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-royal/85"></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10 w-full">
+    <div class="max-w-2xl reveal">
+      <span
+        class="text-accent font-bold tracking-[.3em] text-[11px] mb-4 block uppercase"
+        >Est for Smooth Medical Migration</span
+      >
+      <h1
+        class="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-6"
+      >
+        Professional Relocation for
+        <span class="text-accent underline decoration-white/20"
+          >Nigerian Doctors.</span
+        >
+      </h1>
+      <p
+        class="text-sm md:text-base text-slate-200 mb-10 leading-relaxed font-light opacity-90 max-w-lg"
+      >
+        We replace uncertainty with institutional structure. Navigate your
+        German licensing, language proficiency, and hospital placement through a
+        single, doctor-led firm.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <button
+          onclick="scrollToId('eligibility')"
+          class="bg-accent hover:bg-orange-600 text-white font-bold py-4 px-9 rounded text-sm transition-all shadow-xl shadow-royal/40"
+        >
+          Check Eligibility
+        </button>
+        <a href="{% url 'bookings' %}"
+          class="bg-white/10 border border-white/20 hover:bg-white/20 text-white font-bold py-4 px-9 rounded text-sm backdrop-blur-sm transition-all"
+        >
+          Bookings
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Dr. Jakpa",
+    "url": "https://drjakpa.com",
+    "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/home.webp' %}",
+    "description": "Professional medical migration support for Nigerian doctors seeking German Approbation. Expert guidance in licensing, language training, and hospital placement.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "DE"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/dr-jakpa",
+      "https://twitter.com/drjakpa"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "availableLanguage": ["English", "German"]
+    }
+  }
+</script>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Dr. Jakpa",
+    "url": "https://drjakpa.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://drjakpa.com/blog/search/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+</script>
+
+<section class="bg-neutral-bg py-12 border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8">
+    <div class="reveal text-center border-r border-slate-200 last:border-0">
+      <h3 class="text-2xl font-black text-royal">100%</h3>
+      <p
+        class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mt-1"
+      >
+        Legal Pathway
+      </p>
+    </div>
+    <div
+      class="reveal text-center border-r border-slate-200 last:border-0"
+      style="transition-delay: 100ms"
+    >
+      <h3 class="text-2xl font-black text-royal">24/7</h3>
+      <p
+        class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mt-1"
+      >
+        Direct Support
+      </p>
+    </div>
+    <div
+      class="reveal text-center border-r border-slate-200 last:border-0"
+      style="transition-delay: 200ms"
+    >
+      <h3 class="text-2xl font-black text-royal">Anabin</h3>
+      <p
+        class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mt-1"
+      >
+        Certified Schools
+      </p>
+    </div>
+    <div
+      class="reveal text-center last:border-0"
+      style="transition-delay: 300ms"
+    >
+      <h3 class="text-2xl font-black text-royal">Top-Tier</h3>
+      <p
+        class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mt-1"
+      >
+        Hospital Network
+      </p>
+    </div>
+  </div>
+</section>
+
+    {% include 'main/partials/aims.html' %}
+    {% include 'main/partials/services.html' %}
+    {% include 'main/partials/eligibility.html' %}
+
+<section id="blog" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="reveal flex justify-between items-end mb-16">
+      <div>
+        <h2 class="text-2xl font-bold text-royal mb-2">Latest Insights</h2>
+        <p class="text-xs text-slate-600">
+          Explore articles that'll help guide your path!
+        </p>
+      </div>
+      <a href="{% url 'blog' %}" class="text-accent font-bold text-sm hover:underline"
+        >View All Posts &rarr;</a
+      >
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      {% for post in posts %}
+      <div class="reveal group" style="transition-delay: 100ms">
+        {% if post.featured_image %}
+        <div class="h-48 bg-royal/10 rounded-xl mb-6 overflow-hidden relative">
+          <img
+            src="{{ post.featured_image.url }}"
+            class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 opacity-80"
+            alt="Blog Post"
+          />
+          <div class="absolute inset-0 bg-royal/40"></div>
+        </div>
+        {% else %}
+        <div class="h-48 bg-royal/10 rounded-xl mb-6 overflow-hidden relative">
+          <img
+            src="#"
+            class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 opacity-80"
+            alt="Blog Post"
+          />
+          <div class="absolute inset-0 bg-royal/40"></div>
+        </div>
+        {% endif %}
+        {% for cat in post.category.all %}
+        <span
+          class="text-[10px] font-bold text-accent uppercase tracking-[.2em] mb-2 block"
+          >{{ cat.name }}</span
+        >
+        {% endfor %}
+        <h4
+          class="font-bold text-royal text-base mb-3 leading-tight group-hover:text-accent transition-colors"
+        >
+          <a href="{% url 'posts_by_category_or_post' post.slug %}">{{ post.title }}</a>
+        </h4>
+        <p class="text-[12px] text-slate-600 leading-relaxed line-clamp-2">
+          {{ post.excerpt|safe|truncatewords:8 }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="py-24 bg-neutralBg overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex flex-col items-center text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-black text-royal uppercase tracking-tighter">
+            Community Success Stories
+        </h2>
+    </div>
+
+    <div id="testimonial-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 transition-all duration-700 ease-in-out">
+      {% for testimonial in testimonials %}
+      <div class="testimonial-card hidden opacity-0 translate-y-4 transition-all duration-700 bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-sm relative flex flex-col justify-between h-full" 
+           data-index="{{ forloop.counter0 }}">
+        
+        <div class="relative z-10">
+            <i data-lucide="quote" class="absolute -top-4 -left-2 w-10 h-10 md:w-16 md:h-16 text-slate-50"></i>
+            <p class="text-xs md:text-sm text-slate-600 italic mb-8 leading-relaxed relative font-medium">
+              "{{ testimonial.testimony }}"
+            </p>
+        </div>
+
+        <div class="flex items-center gap-4 border-t border-slate-50 pt-6">
+          <div class="w-10 h-10 md:w-12 md:h-12 bg-royal/10 rounded-full shrink-0 overflow-hidden border-2 border-white shadow-sm">
+            {% if testimonial.image %}
+                <img src="{{ testimonial.image.url }}" class="w-full h-full object-cover" alt="{{ testimonial.name }}">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center text-royal font-black text-xs">{{ testimonial.name|slice:":1" }}</div>
+            {% endif %}
+          </div>
+          <div class="min-w-0">
+            <p class="font-black text-royal text-[10px] md:text-xs uppercase tracking-tight truncate">
+              {{ testimonial.name }}
+            </p>
+            <p class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate">
+              {{ testimonial.location }}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="flex justify-center gap-2 mt-12" id="testimonial-dots">
+        </div>
+  </div>
+</section>
+
+<style>
+    /* Ensure height consistency */
+    .testimonial-card.active {
+        display: flex !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+</style>
+
+<section id="faq" class="py-24 bg-neutral-bg border-t border-slate-200">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2
+      class="reveal text-2xl font-bold text-royal text-center mb-16 uppercase tracking-widest"
+    >
+      Frequently Asked Questions
+    </h2>
+    <div class="space-y-4">
+      {% for faq in faqs %}
+      <div
+        class="reveal bg-white border border-slate-200 rounded-lg overflow-hidden"
+      >
+        <button
+          onclick="toggleFaq(this)"
+          class="w-full flex justify-between items-center p-6 text-left font-bold text-sm text-royal hover:bg-slate-50"
+        >
+          {{ faq.question }}
+          <i
+            data-lucide="plus"
+            class="w-5 h-5 text-accent transition-transform"
+          ></i>
+        </button>
+        <div class="faq-drawer bg-slate-50 px-6">
+          <p class="py-6 text-[12px] text-slate-600 leading-relaxed">
+            {{ faq.answer }}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

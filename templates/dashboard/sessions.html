@@ -1,0 +1,238 @@
+{% extends 'dashboard_base.html' %} 
+
+{% load static %} 
+
+{% block title %}Booking Sessions | dr.Jakpa{% endblock %}
+
+{% block content %}
+<div class="max-w-full">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+        <div>
+            <h1 class="text-2xl font-black text-royal uppercase tracking-tighter">Session Management</h1>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage available booking sessions</p>
+        </div>
+        <button
+            id="add-session-btn"
+            class="px-6 py-3 bg-accent text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 shadow-lg shadow-orange-100 transition-all flex items-center justify-center gap-2"
+        >
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Add Session
+        </button>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl mb-8 overflow-hidden shadow-sm">
+        <div class="flex flex-wrap gap-2 p-2 bg-slate-50/50">
+            <a
+                href="?availability=all"
+                class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if availability_filter == 'all' %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}"
+            >
+                All Sessions <span class="ml-1 opacity-60">({{ all_count }})</span>
+            </a>
+            <a
+                href="?availability=available"
+                class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if availability_filter == 'available' %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}"
+            >
+                Available <span class="ml-1 opacity-60">({{ available_count }})</span>
+            </a>
+            <a
+                href="?availability=unavailable"
+                class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if availability_filter == 'unavailable' %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}"
+            >
+                Unavailable <span class="ml-1 opacity-60">({{ unavailable_count }})</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm mb-10 overflow-hidden">
+        <div class="w-full">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-200 hidden md:table-header-group">
+                    <tr>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Time</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Bookings</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for session in sessions %}
+                    <tr class="flex flex-col md:table-row transition-colors">
+                        <td class="px-6 py-4 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-600 md:hidden uppercase tracking-widest text-[9px] block mb-1">Date:</span>
+                            <div class="text-[11px] font-black text-royal uppercase tracking-tight">{{ session.date|date:"M d, Y" }}</div>
+                        </td>
+
+                        <td class="px-6 py-2 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-600 md:hidden uppercase tracking-widest text-[9px] block mb-1">Time:</span>
+                            <div class="text-[11px] font-medium text-slate-900">{{ session.time|time:"h:i A" }}</div>
+                        </td>
+
+                        <td class="px-6 py-2 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-600 md:hidden uppercase tracking-widest text-[9px] block mb-1">Status:</span>
+                            {% if session.is_available %}
+                            <span class="px-3 py-1 text-[9px] font-black uppercase tracking-widest bg-green-100 text-green-700 rounded-full">Available</span>
+                            {% else %}
+                            <span class="px-3 py-1 text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 rounded-full">Unavailable</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="px-6 py-2 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-600 md:hidden uppercase tracking-widest text-[9px] block mb-1">Bookings:</span>
+                            <div class="text-[11px] font-bold text-slate-700">{{ session.bookings_count }}</div>
+                        </td>
+
+                        <td class="px-6 py-5 md:py-5 text-left md:text-right align-middle border-b border-slate-50 md:border-0 bg-slate-50/30 md:bg-transparent">
+                            <div class="flex items-center md:justify-end gap-5">
+                                <button class="edit-session-btn text-royal hover:text-accent transition-colors" data-session-id="{{ session.id }}">
+                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                </button>
+                                <button class="delete-session-btn text-red-500 hover:text-red-700 transition-colors" data-session-id="{{ session.id }}">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-24 text-center">
+                            <i data-lucide="calendar-x" class="w-16 h-16 text-slate-100 mx-auto mb-4"></i>
+                            <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">No sessions found</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="mt-10 pb-10 flex justify-center">
+        <nav class="flex items-center gap-2">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&availability={{ availability_filter }}" class="w-10 h-10 bg-white border border-slate-200 text-royal rounded-lg flex items-center justify-center hover:bg-royal hover:text-white transition-all shadow-sm">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </a>
+            {% endif %}
+
+            <div class="px-6 py-2.5 bg-white border border-slate-200 text-[10px] font-black text-royal rounded-lg uppercase tracking-widest shadow-sm">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </div>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&availability={{ availability_filter }}" class="w-10 h-10 bg-white border border-slate-200 text-royal rounded-lg flex items-center justify-center hover:bg-royal hover:text-white transition-all shadow-sm">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+
+    <div id="session-modal" class="hidden fixed inset-0 bg-royal/40 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
+            <div class="flex justify-between items-center px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+                <h3 id="modal-title" class="text-xs font-black text-royal uppercase tracking-[0.2em]">Add Session</h3>
+                <button class="close-modal text-slate-400 hover:text-royal transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <form id="session-form" class="p-8 space-y-6">
+                <input type="hidden" id="session-id" name="session_id" />
+
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Date</label>
+                    <input
+                        type="date"
+                        id="session-date"
+                        name="date"
+                        required
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 focus:border-royal outline-none transition-all"
+                    />
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Time</label>
+                    <input
+                        type="time"
+                        id="session-time"
+                        name="time"
+                        required
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 focus:border-royal outline-none transition-all"
+                    />
+                </div>
+
+                <div id="availability-toggle" class="hidden">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            id="session-available"
+                            name="is_available"
+                            class="w-4 h-4 rounded border-slate-300 text-royal focus:ring-royal"
+                        />
+                        <span class="text-[11px] font-bold text-slate-600 group-hover:text-royal uppercase tracking-tight transition-colors">Available for booking</span>
+                    </label>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                    <button
+                        type="submit"
+                        class="flex-1 px-6 py-3 bg-royal text-white rounded-lg text-[10px] font-black uppercase tracking-widest shadow-xl shadow-royal/10 hover:bg-royal/90 transition-all"
+                    >
+                        <span id="submit-btn-text">Create Session</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="close-modal px-6 py-3 bg-white border border-slate-200 text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-slate-50 transition-all"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="hidden fixed inset-0 bg-royal/40 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
+            <div class="p-8">
+                <div class="flex items-center gap-5 mb-6">
+                    <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center shrink-0">
+                        <i data-lucide="alert-circle" class="w-7 h-7 text-red-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-royal uppercase tracking-widest">Delete Session</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">This action cannot be undone</p>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-500 leading-relaxed mb-8 font-medium">
+                    Are you sure you want to delete this session? Sessions with existing bookings cannot be deleted from the system.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button
+                        id="confirm-delete-btn"
+                        class="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition-all shadow-lg shadow-red-100"
+                    >
+                        Delete Session
+                    </button>
+                    <button
+                        class="close-delete-modal px-6 py-3 bg-white border border-slate-200 text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-slate-50 transition-all"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
+
+{% block scripts %}
+<script src="{% static 'js/dashboard/sessions.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}

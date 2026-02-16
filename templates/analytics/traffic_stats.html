@@ -1,0 +1,167 @@
+{% extends 'dashboard_base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<title>{% block title %} Traffic Stats - dr. Jakpa {% endblock %}</title>
+
+<div class="max-w-full">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-10 space-y-6 sm:space-y-0">
+        <div>
+            <h1 class="text-2xl font-black text-royal uppercase tracking-tighter">Analytics Overview</h1>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Platform traffic and engagement metrics.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="flex items-center gap-2 bg-white p-1 rounded-lg border border-slate-200">
+                <input type="date" class="px-3 py-2 text-[10px] font-bold text-royal uppercase bg-transparent outline-none" id="start-date">
+                <span class="text-slate-300 text-[10px] font-bold uppercase">to</span>
+                <input type="date" class="px-3 py-2 text-[10px] font-bold text-royal uppercase bg-transparent outline-none" id="end-date">
+            </div>
+            <button class="px-6 py-3 bg-accent text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 shadow-lg shadow-orange-100 transition-all whitespace-nowrap" id="apply-date-range">Apply</button>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 overflow-hidden">
+        <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-royal rounded flex items-center justify-center">
+                    <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-white"></i>
+                </div>
+                <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">Views</h3>
+            </div>
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <label class="flex items-center cursor-pointer group">
+                        <input type="checkbox" id="views-toggle" checked class="w-3.5 h-3.5 rounded border-slate-300 text-royal focus:ring-royal mr-2"> 
+                        <span class="text-[10px] font-bold text-slate-400 group-hover:text-royal uppercase tracking-widest">Views</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer group">
+                        <input type="checkbox" id="visitors-toggle" checked class="w-3.5 h-3.5 rounded border-slate-300 text-accent focus:ring-accent mr-2"> 
+                        <span class="text-[10px] font-bold text-slate-400 group-hover:text-accent uppercase tracking-widest">Visitors</span>
+                    </label>
+                </div>
+                <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+                <div class="flex items-center gap-2">
+                    <select class="text-[10px] font-black text-royal uppercase bg-slate-100 border-none rounded-md px-3 py-1.5 outline-none focus:ring-1 focus:ring-royal" id="period-dropdown">
+                        <option value="today">Days</option>
+                        <option value="week" selected>Weeks</option>
+                        <option value="month">Months</option>
+                        <option value="year">Years</option>
+                    </select>
+                    <div class="flex items-center p-1 bg-slate-100 rounded-md">
+                        <button class="p-1.5 text-slate-400 hover:text-royal transition-colors">📈</button>
+                        <button class="p-1.5 bg-white text-royal shadow-sm rounded border border-slate-100">📊</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-6 sm:p-10">
+            <div class="w-full h-64 sm:h-80">
+                <canvas id="main-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center mb-3">
+                <i data-lucide="eye" class="text-slate-400 mr-2 w-4 h-4"></i>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Views</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-royal tracking-tighter" id="total-views-stat">973</div>
+            <div class="text-[10px] font-black text-green-600 mt-2 uppercase tracking-widest">↗ 14%</div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center mb-3">
+                <i data-lucide="users" class="text-slate-400 mr-2 w-4 h-4"></i>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Visitors</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-royal tracking-tighter" id="total-visitors-stat">440</div>
+            <div class="text-[10px] font-black text-green-600 mt-2 uppercase tracking-widest">↗ 11%</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="info" class="w-3.5 h-3.5 text-slate-300"></i>
+                    <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">Most viewed</h3>
+                </div>
+                <button class="px-3 py-1.5 bg-accent text-white rounded-lg text-[9px] font-black uppercase tracking-widest">Posts & pages</button>
+            </div>
+            <div class="p-6">
+                <div id="most-viewed-list" class="space-y-4">
+                    </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="info" class="w-3.5 h-3.5 text-slate-300"></i>
+                    <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">Traffic Sources</h3>
+                </div>
+            </div>
+            <div class="p-6">
+                <select id="traffic-source-dropdown" class="w-full mb-6 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] font-bold text-royal uppercase outline-none focus:border-royal transition-all">
+                    <option value="">Select a traffic source</option>
+                    <option value="search">Search Engines</option>
+                    <option value="social">Social Media</option>
+                    <option value="referral">Referral Sites</option>
+                    <option value="direct">Direct Traffic</option>
+                </select>
+                
+                <div id="source-details" class="space-y-4">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-8 italic">
+                        Select a traffic source to view details
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="info" class="w-3.5 h-3.5 text-slate-300"></i>
+                    <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">Locations</h3>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="flex p-1 bg-slate-100 rounded-xl mb-6">
+                    <button class="flex-1 px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-white text-royal rounded-lg shadow-sm" data-tab="countries">Countries</button>
+                    <button class="flex-1 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-royal transition-all" data-tab="regions">Regions</button>
+                </div>
+                
+                <div class="bg-slate-50 h-48 rounded-2xl border border-slate-100 flex items-center justify-center mb-6 relative overflow-hidden group">
+                    <div id="locations-map" class="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
+                        <div class="text-center px-4">
+                            <div class="w-14 h-14 bg-royal rounded-full mx-auto mb-4 flex items-center justify-center shadow-xl shadow-royal/20 group-hover:scale-110 transition-transform">
+                                <i data-lucide="map-pin" class="text-white w-6 h-6"></i>
+                            </div>
+                            <div class="text-[10px] font-black text-royal uppercase tracking-widest">Interactive map rendering...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="location-data" class="space-y-3">
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/traffic_stats.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+</script>
+
+{% endblock %}

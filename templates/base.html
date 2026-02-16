@@ -1,0 +1,94 @@
+{% load static %}
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Dynamic Title -->
+    <title>
+      {% block title %}Dr. Jakpa | Professional Medical Migration Support{% endblock %}
+    </title>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="{% block description %}Professional medical licensing and relocation support for Nigerian doctors seeking to practice medicine in Germany. Expert guidance for Approbation, language training, and hospital placement.{% endblock %}"
+    />
+    <meta
+      name="keywords"
+      content="{% block keywords %}medical migration Germany, Nigerian doctors Germany, Approbation Germany, FSP exam preparation, medical licensing Germany, hospital placement Germany{% endblock %}"
+    />
+    <meta name="author" content="Dr. Jakpa" />
+    <meta name="robots" content="index, follow" />
+    <link
+      rel="canonical"
+      href="{% block canonical %}https://drjakpa.com{% endblock %}"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="{% block og_url %}https://drjakpa.com{% endblock %}"
+    />
+    <meta
+      property="og:title"
+      content="{% block og_title %}Dr. Jakpa | Professional Medical Migration Support{% endblock %}"
+    />
+    <meta
+      property="og:description"
+      content="{% block og_description %}Professional medical licensing and relocation support for Nigerian doctors seeking to practice medicine in Germany.{% endblock %}"
+    />
+    <meta
+      property="og:image"
+      content="{% block og_image %}{% static 'images/home.webp' %}{% endblock %}"
+    />
+    <meta property="og:site_name" content="Dr. Jakpa" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:url"
+      content="{% block twitter_url %}https://drjakpa.com{% endblock %}"
+    />
+    <meta
+      name="twitter:title"
+      content="{% block twitter_title %}Dr. Jakpa | Professional Medical Migration Support{% endblock %}"
+    />
+    <meta
+      name="twitter:description"
+      content="{% block twitter_description %}Professional medical licensing and relocation support for Nigerian doctors seeking to practice medicine in Germany.{% endblock %}"
+    />
+    <meta
+      name="twitter:image"
+      content="{% block twitter_image %}{% static 'images/home.webp' %}{% endblock %}"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/chatbot.css' %}" />
+  </head>
+
+  <body class="bg-white text-slate-700 antialiased font-sans overflow-x-hidden">
+    {% include 'partials/navbar.html' %} 
+    {% include 'includes/messages.html' %}
+    {% block content %} 
+    {% endblock %} 
+    {% include 'partials/footer.html' %}
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/chatbot.js' %}"></script>
+  </body>
+</html>

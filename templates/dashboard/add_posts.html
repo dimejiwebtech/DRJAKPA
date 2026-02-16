@@ -1,0 +1,418 @@
+{% extends 'dashboard_base.html' %} 
+{% load static %} 
+
+{% block title %}{% if post %}Edit Post{% else %}Add New Post{% endif %}{% endblock %} 
+
+{% block extra_css %}
+<style>
+  /* TinyMCE Institutional Styling */
+  .tox-tinymce {
+    border-radius: 0.75rem !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+  .tox .tox-edit-area__iframe {
+    background-color: #ffffff !important;
+  }
+  .tox .tox-toolbar-overlord,
+  .tox .tox-toolbar__primary {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+  }
+  .tox .tox-tbtn {
+    color: #1e3a8a !important;
+  }
+  .tox .tox-tbtn:hover {
+    background-color: #eff6ff !important;
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="max-w-full">
+  <div
+    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
+  >
+    <div>
+      <h1 class="text-2xl font-bold text-royal">
+        {% if post %}Edit Post{% else %}Add New Post{% endif %}
+      </h1>
+      <p class="text-slate-400 text-xs mt-1">
+        {% if post %}Update your blog post{% else %}Create a new blog post{% endif %}
+      </p>
+    </div>
+    <a
+      href="{% url 'posts' %}"
+      class="inline-flex items-center gap-2 text-slate-400 hover:text-royal transition-colors text-xs font-bold uppercase tracking-widest"
+    >
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      Back to Posts
+    </a>
+  </div>
+
+  <form id="post-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="flex flex-col lg:flex-row gap-8">
+      <div class="flex-1 space-y-6">
+        <div
+          class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <input
+            type="text"
+            name="title"
+            id="id_title"
+            value="{% if post %}{{ post.title }}{% elif form.title.value %}{{ form.title.value }}{% endif %}"
+            placeholder="Enter post title..."
+            class="w-full bg-transparent text-royal text-xl font-bold px-6 py-5 border-0 focus:ring-0 focus:outline-none placeholder-slate-300"
+          />
+
+          <div
+            id="permalink-section"
+            class="px-6 pb-4 border-t border-slate-50 {% if not post.title and not form.title.value %}hidden{% endif %}"
+          >
+            <div
+              class="flex flex-wrap items-center gap-2 text-[11px] font-medium"
+            >
+              <span class="text-slate-400">Permalink:</span>
+              <div
+                class="flex items-center gap-2 bg-slate-50 px-2 py-0.5 rounded border border-slate-100"
+              >
+                <span class="text-slate-400">{{ request.get_host }}/blog/</span>
+                <span id="slug-display" class="text-royal font-bold"
+                  >{{ post.slug|default:form.slug.value|default:"" }}</span
+                >
+                <div id="slug-edit" class="hidden">
+                  <input
+                    type="text"
+                    name="slug"
+                    id="id_slug"
+                    value="{{ post.slug|default:form.slug.value|default:'' }}"
+                    class="bg-white border border-slate-200 text-royal rounded px-2 py-0.5 w-48 focus:border-royal outline-none"
+                  />
+                </div>
+                <button
+                  type="button"
+                  id="edit-slug-btn"
+                  class="text-accent font-bold hover:text-royal transition-colors"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  id="save-slug-btn"
+                  class="text-green-600 font-bold hidden"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  id="cancel-slug-btn"
+                  class="text-slate-400 font-bold hidden"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <div
+            class="px-6 py-3 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3"
+          >
+            <button
+              type="button"
+              id="add-media-btn"
+              class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-500 rounded-lg hover:text-royal hover:border-royal transition-all text-xs font-bold"
+            >
+              <i data-lucide="image" class="w-4 h-4"></i>
+              Add Media
+            </button>
+          </div>
+          <div class="p-4">{{ form.content }}</div>
+        </div>
+
+        <div
+          class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="text-royal font-bold text-sm">Excerpt</h3>
+            <p class="text-slate-400 text-xs mt-1">
+              A short summary of your post (optional)
+            </p>
+          </div>
+          <div class="p-6">
+            <textarea
+              name="excerpt"
+              id="id_excerpt"
+              rows="3"
+              class="w-full bg-slate-50 border border-slate-200 text-slate-600 rounded-lg p-4 text-sm focus:border-royal outline-none placeholder-slate-300 transition-all"
+              placeholder="Enter excerpt..."
+            >
+{% if post %}{{ post.excerpt }}{% elif form.excerpt.value %}{{ form.excerpt.value }}{% endif %}</textarea
+            >
+          </div>
+        </div>
+
+        <div
+          class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="text-royal font-bold text-sm">SEO Settings</h3>
+          </div>
+          <div class="p-6 space-y-6">
+            <div>
+              <label
+                for="id_seo_description"
+                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3"
+              >
+                Meta Description
+                <span class="font-normal">(160 characters max)</span>
+              </label>
+              <textarea
+                name="seo_description"
+                id="id_seo_description"
+                rows="2"
+                maxlength="160"
+                class="w-full bg-slate-50 border border-slate-200 text-slate-600 rounded-lg p-4 text-sm focus:border-royal outline-none transition-all"
+                placeholder="SEO description..."
+              >
+{% if post %}{{ post.seo_description }}{% elif form.seo_description.value %}{{ form.seo_description.value }}{% endif %}</textarea
+              >
+              <div class="flex justify-end mt-2">
+                <span class="text-[10px] font-bold text-slate-300 uppercase"
+                  ><span id="seo-char-count">0</span>/160</span
+                >
+              </div>
+            </div>
+            <div>
+              <label
+                for="id_seo_keywords"
+                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3"
+                >Keywords</label
+              >
+              <input
+                type="text"
+                name="seo_keywords"
+                id="id_seo_keywords"
+                value="{% if post %}{{ post.seo_keywords }}{% elif form.seo_keywords.value %}{{ form.seo_keywords.value }}{% endif %}"
+                class="w-full bg-slate-50 border border-slate-200 text-slate-600 rounded-lg px-4 py-2.5 text-sm focus:border-royal outline-none transition-all"
+                placeholder="keyword1, keyword2, keyword3"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full lg:w-80 space-y-6">
+        <div
+          class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="text-royal font-bold text-sm">Publish</h3>
+          </div>
+          <div class="p-6 space-y-6">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400 font-bold uppercase tracking-widest"
+                >Status:</span
+              >
+              <span
+                id="post-status"
+                class="font-black uppercase tracking-widest {% if post.status == 'published' %}text-green-600{% else %}text-orange-500{% endif %}"
+              >
+                {% if post %}{{ post.get_status_display }}{% else %}Draft{% endif %}
+              </span>
+            </div>
+
+            <div>
+              <label
+                for="id_published_date"
+                class="block text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-3"
+                >Publish Date:</label
+              >
+              <input
+                type="datetime-local"
+                name="published_date"
+                id="id_published_date"
+                value="{% if post.published_date %}{{ post.published_date|date:'Y-m-d\TH:i' }}{% endif %}"
+                class="w-full bg-slate-50 border border-slate-200 text-royal font-bold rounded-lg px-3 py-2 text-xs focus:border-royal outline-none transition-all"
+              />
+            </div>
+
+            <div class="pt-4 border-t border-slate-50 space-y-2">
+              <button
+                type="submit"
+                name="save_draft"
+                class="w-full py-2.5 bg-white border border-slate-200 text-royal font-bold text-[11px] uppercase tracking-widest rounded-lg hover:bg-slate-50 transition-all"
+              >
+                Save Draft
+              </button>
+              <button
+                type="button"
+                id="preview-btn"
+                class="w-full py-2.5 bg-blue-50 text-royal font-bold text-[11px] uppercase tracking-widest rounded-lg hover:bg-blue-100 transition-all"
+              >
+                Preview
+              </button>
+              <button
+                type="submit"
+                name="publish"
+                class="w-full py-3 bg-accent text-white font-black text-[11px] uppercase tracking-widest rounded-lg hover:bg-orange-600 shadow-lg shadow-orange-100 transition-all"
+              >
+                {% if post and post.status == 'published' %}Update{% else %}Publish{% endif %}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="text-royal font-bold text-sm">Featured Image</h3>
+          </div>
+          <div class="p-6">
+            <div
+              id="featured-image-preview"
+              class="{% if not post.featured_image %}hidden{% endif %} mb-4 relative group"
+            >
+              {% if post and post.featured_image %}
+              <img
+                src="{{ post.featured_image.url }}"
+                alt="Featured Image"
+                class="w-full h-32 object-cover rounded-lg"
+              />
+              {% else %}
+              <img
+                src=""
+                alt="Featured Image"
+                class="w-full h-32 object-cover rounded-lg"
+              />
+              {% endif %}
+              <button
+                type="button"
+                id="remove-featured-image-btn"
+                class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <input
+              type="hidden"
+              id="selected-featured-image-id"
+              name="featured_image_id"
+              value="{% if form.featured_image_id.value %}{{ form.featured_image_id.value }}{% endif %}"
+            />
+
+            <button
+              type="button"
+              id="select-featured-image-btn"
+              class="w-full flex flex-col items-center justify-center gap-2 p-6 bg-slate-50 border-2 border-slate-200 border-dashed text-slate-400 rounded-xl hover:border-royal hover:text-royal transition-all"
+            >
+              <i data-lucide="image-plus" class="w-6 h-6"></i>
+              <span
+                id="featured-image-name"
+                class="text-[10px] font-bold uppercase tracking-widest text-center"
+              >
+                {% if post and post.featured_image %}Change Image{% else %}Select Image{% endif %}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <div
+            class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center"
+          >
+            <h3 class="text-royal font-bold text-sm">Categories</h3>
+          </div>
+          <div class="p-6 space-y-3 max-h-56 overflow-y-auto custom-scrollbar">
+            {% for category in all_categories %}
+            <label class="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                name="category"
+                value="{{ category.id }}"
+                {%
+                if
+                post
+                and
+                category
+                in
+                post.category.all
+                %}checked{%
+                endif
+                %}
+                class="rounded border-slate-300 text-royal focus:ring-royal"
+              />
+              <span
+                class="text-xs font-medium text-slate-500 group-hover:text-royal transition-colors"
+                >{{ category.name }}</span
+              >
+            </label>
+            {% empty %}
+            <p class="text-xs text-slate-400 italic text-center">
+              No categories available.
+            </p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div
+  id="autosave-indicator"
+  class="fixed bottom-6 right-6 bg-royal text-white px-5 py-2.5 rounded-full shadow-2xl hidden z-50 flex items-center gap-3 text-xs font-bold tracking-wide"
+>
+  <div
+    class="animate-spin h-3.5 w-3.5 border-2 border-white/20 border-t-white rounded-full"
+  ></div>
+  Saving Draft...
+</div>
+{% endblock %} 
+
+{% block scripts %} 
+
+{{ form.media }}
+<script>
+  window.djangoData = {
+      urls: {
+          generateSlug: "{% url 'generate_slug' %}",
+          autoSave: "{% url 'auto_save_post' %}",
+          editUrl: "{% url 'edit_post' 0 %}".replace('/0/', '/'),
+          removeFeaturedImage: "{% url 'remove_featured_image' %}",
+      },
+      contentId: {% if post %}{{ post.id }}{% else %}null{% endif %},
+      contentType: 'post',
+      csrfToken: "{{ csrf_token }}"
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      // SEO Character Counter
+      const seoInput = document.getElementById('id_seo_description');
+      const seoCount = document.getElementById('seo-char-count');
+      if(seoInput && seoCount) {
+          seoCount.innerText = seoInput.value.length;
+          seoInput.addEventListener('input', () => { seoCount.innerText = seoInput.value.length; });
+      }
+
+      // Initialize the content editor after TinyMCE is ready
+      const initEditor = setInterval(() => {
+        if (window.tinymce && tinymce.get('id_content')) {
+          window.contentEditor = new ContentEditor();
+          clearInterval(initEditor);
+        }
+      }, 500);
+  });
+</script>
+<script src="{% static 'js/dashboard/content_editor.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,204 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-royal: #1e3a8a;
+  --color-accent: #f97316;
+  --color-neutral-bg: #f8fafc;
+
+  --font-sans: 'Poppins', sans-serif;
+}
+
+/* Prevent horizontal scroll without breaking mobile */
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-royal text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-accent transition-all shadow-lg hover:shadow-xl;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-lg border border-gray-100 p-8;
+  }
+
+  /* Custom Tabs & UI elements */
+  .aim-content {
+    display: none;
+  }
+  .aim-content.active {
+    display: grid;
+    animation: fadeIn 0.4s ease-out;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .faq-drawer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+  }
+  .quiz-step {
+    display: none;
+  }
+  .quiz-step.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  .snap-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+  .snap-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  .snap-scroll-container:active {
+    cursor: grabbing;
+  }
+
+  .service-card {
+    scroll-snap-align: start;
+    flex: 0 0 calc(100% - 12px);
+  }
+
+  @media (min-width: 1024px) {
+    .service-card {
+      flex: 0 0 calc(20% - 16px);
+    }
+  }
+
+  .team-scroll-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+  .team-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+  .team-scroll-wrapper:active {
+    cursor: grabbing;
+  }
+  .team-card:hover .team-social {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .team-card {
+    scroll-snap-align: start;
+    flex: 0 0 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .team-card {
+      flex: 0 0 calc(25% - 18px);
+    }
+  }
+
+  .flat-border {
+    border: 1px solid #f1f5f9;
+  }
+
+  /* Contact Us */
+  .form-input:focus {
+    border-color: #f97316;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  }
+  .social-btn:hover {
+    background-color: #f97316;
+    color: white;
+    transform: translateY(-3px);
+  }
+
+  /* Bookings */
+  .option-card.selected {
+    border-color: #f97316;
+    background-color: #fff7ed;
+  }
+  .slot-btn.active {
+    background-color: #1e3a8a;
+    color: white;
+    border-color: #1e3a8a;
+  }
+
+
+  /* Blog */
+.pill-active { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
+
+/* Moderate Featured Grid */
+.featured-row {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+    .featured-row {
+        grid-template-columns: 2fr 1.2fr 1.2fr;
+    }
+}
+
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+}
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1);
+  }
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.9s ease;
+  }
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.9s ease;
+  }
+  .active-reveal {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@layer utilities {
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}

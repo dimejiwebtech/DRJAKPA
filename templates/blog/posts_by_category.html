@@ -1,0 +1,143 @@
+{% extends 'base.html' %} 
+
+{% block title %}{{ category.name }} - Medical Migration Insights{% endblock %} {% block description %}Explore {{ category.name }} articles and insights for Nigerian doctors seeking medical licensing and relocation to Germany. Expert guidance and practical tips.{% endblock %} {% block keywords %}{{ category.name }}, medical migration, german medical licensing, approbation, FSP exam{% endblock %} {% block canonical %}https://drjakpa.com/blog/category/{{ category.slug }}/{% endblock %} 
+
+{% block og_title %}{{ category.name }} Articles - Dr. Jakpa{% endblock %} 
+
+{% block og_description %}Comprehensive {{ category.name }} resources for medical professionals planning their migration to Germany.{% endblock %} 
+
+{% block content %}
+
+<main class="pt-32 pb-24">
+  <header class="max-w-7xl mx-auto px-6 mb-16 reveal">
+    <div
+      class="flex items-center gap-2 text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4"
+    >
+      <a href="{% url 'blog' %}" class="hover:text-royal transition-colors"
+        >Blog</a
+      >
+      <i data-lucide="chevron-right" class="w-3 h-3"></i>
+      <span class="text-royal">{{category.name}}</span>
+    </div>
+    <h1
+      class="text-3xl md:text-5xl font-extrabold text-royal uppercase tracking-tighter mb-4"
+    >
+      {{category.name}}
+    </h1>
+    <p class="max-w-2xl text-[13px] text-slate-500 leading-relaxed font-light">
+      {{category.description}}
+    </p>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-6">
+    {% if page_obj %}
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16"
+    >
+      {% for post in page_obj %}
+      <article class="reveal group">
+        <div class="aspect-video rounded-xl overflow-hidden bg-slate-100 mb-6">
+          {% if post.featured_image %}
+          <img
+            src="{{post.featured_image.url}}"
+            alt="{{post.title}}"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          {% else %}
+          <div
+            class="w-full h-full flex items-center justify-center bg-gradient-to-br from-royal/10 to-accent/10"
+          ></div>
+          {% endif %}
+        </div>
+        <div class="space-y-3">
+          {% for cat in post.category.all %}
+          <span
+            class="text-[9px] font-black text-accent uppercase tracking-widest"
+          >
+            <a href="{% url 'posts_by_category_or_post' cat.slug %}"
+              >{{cat.name}}</a
+            ></span
+          >
+          {% endfor %}
+          <h2
+            class="text-[15px] font-bold text-royal leading-snug group-hover:text-accent transition-colors uppercase tracking-tight mt-1"
+          >
+            <a href="{% url 'posts_by_category_or_post' post.slug %}"
+              >{{post.title}}</a
+            >
+          </h2>
+          <p class="text-[11px] text-slate-500 leading-relaxed line-clamp-3">
+            {{post.excerpt|safe|truncatewords_html:7}}
+          </p>
+          <div class="pt-2">
+            <a
+              href="{% url 'posts_by_category_or_post' post.slug %}"
+              class="text-[10px] font-black text-royal uppercase tracking-widest border-b border-royal pb-1 hover:text-accent hover:border-accent transition-all"
+              >Read More</a
+            >
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20">
+      <h2 class="text-2xl font-bold text-royal uppercase tracking-tighter mb-4">
+        No Posts Found
+      </h2>
+      <p class="text-[13px] text-slate-500 leading-relaxed font-light">
+        No posts found in this category.
+      </p>
+    </div>
+    {% endif %} {% if page_obj.has_other_pages %}
+    <div
+      class="mt-24 pt-10 border-t border-slate-100 flex justify-between items-center reveal"
+    >
+      {% if page_obj.has_previous %}
+      <a
+        href="?page={{ page_obj.previous_page_number }}"
+        class="text-[10px] font-black text-royal hover:text-accent uppercase tracking-widest flex items-center gap-2 transition-colors"
+      >
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Previous
+      </a>
+      {% else %}
+      <button
+        class="text-[10px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-2 cursor-not-allowed"
+      >
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Previous
+      </button>
+      {% endif %}
+
+      <div class="flex gap-6 text-[10px] font-black uppercase tracking-widest">
+        {% for num in page_obj.paginator.page_range %} {% if num == page_obj.number %}
+        <span class="text-royal">{{ num|stringformat:"02d" }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a
+          href="?page={{ num }}"
+          class="text-slate-300 hover:text-royal transition-colors"
+          >{{ num|stringformat:"02d" }}</a
+        >
+        {% endif %} 
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_next %}
+      <a
+        href="?page={{ page_obj.next_page_number }}"
+        class="text-[10px] font-black text-royal hover:text-accent uppercase tracking-widest flex items-center gap-2 transition-colors"
+      >
+        Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+      {% else %}
+      <button
+        class="text-[10px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-2 cursor-not-allowed"
+      >
+        Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</main>
+
+{% endblock %}

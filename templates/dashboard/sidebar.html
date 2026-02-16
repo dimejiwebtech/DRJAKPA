@@ -1,0 +1,181 @@
+<aside
+  id="sidebar"
+  class="fixed inset-y-0 left-0 z-50 w-64 bg-royal text-white transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out shrink-0 flex flex-col"
+>
+  <div
+    class="h-20 flex items-center justify-between px-6 border-b border-white/5"
+  >
+    <div class="flex items-center gap-2">
+      <div class="bg-accent p-1 rounded shadow-lg">
+        <i data-lucide="stethoscope" class="text-white w-4 h-4"></i>
+      </div>
+      <span class="text-lg font-bold tracking-tighter uppercase">dr.Jakpa</span>
+    </div>
+    <button
+      id="sidebar-close"
+      class="lg:hidden text-white/40 hover:text-white transition-colors"
+    >
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+  </div>
+
+  <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-1">
+    <a
+      href="{% url 'dashboard' %}"
+      class="nav-link flex items-center gap-3 px-4 py-3 rounded text-[11px] font-bold uppercase tracking-widest transition-all {% if request.path == '/dashboard/' %}active-nav text-accent bg-white/10{% else %}text-white/60 hover:bg-white/5 hover:text-white{% endif %}"
+    >
+      <i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard
+    </a>
+
+    <a
+      href="{% url 'analytics:traffic_stats' %}"
+      class="nav-link flex items-center gap-3 px-4 py-3 rounded text-white/60 hover:bg-white/5 hover:text-white transition-all {% if request.path == '/dashboard/analytics/traffic-stats/' %}active-nav text-accent bg-white/10{% else %}text-white/60 hover:bg-white/5 hover:text-white{% endif %} text-[11px] font-bold uppercase tracking-widest"
+    >
+      <i data-lucide="bar-chart" class="w-4 h-4"></i> Analytics
+    </a>
+
+    <div>
+      <button
+        onclick="toggleSub('booking-sub')"
+        class="w-full flex items-center justify-between px-4 py-3 rounded {% if '/bookings/' in request.path or '/sessions/' in request.path %}text-accent bg-white/10{% else %}text-white/60 hover:bg-white/5 hover:text-white{% endif %} transition-all text-[11px] font-bold uppercase tracking-widest"
+      >
+        <div class="flex items-center gap-3">
+          <i data-lucide="calendar-check" class="w-4 h-4"></i> Bookings
+        </div>
+        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+      </button>
+      <div
+        id="booking-sub"
+        class="{% if '/bookings/' not in request.path and '/sessions/' not in request.path %}hidden{% endif %} pl-11 py-2 space-y-3"
+      >
+        <a
+          href="{% url 'bookings_list' %}"
+          class="block text-[10px] font-bold {% if '/bookings/' in request.path %}text-accent{% else %}text-white/40{% endif %} hover:text-accent uppercase transition-colors"
+          >All Bookings</a
+        >
+        <a
+          href="{% url 'sessions_list' %}"
+          class="block text-[10px] font-bold {% if '/sessions/' in request.path %}text-accent{% else %}text-white/40{% endif %} hover:text-accent uppercase transition-colors"
+          >Sessions</a
+        >
+      </div>
+    </div>
+
+    <div>
+      <button
+        onclick="toggleSub('media-sub')"
+        class="w-full flex items-center justify-between px-4 py-3 rounded {% if '/media/' in request.path %}text-accent bg-white/10{% else %}text-white/60 hover:bg-white/5 hover:text-white{% endif %} transition-all text-[11px] font-bold uppercase tracking-widest"
+      >
+        <div class="flex items-center gap-3">
+          <i data-lucide="image" class="w-4 h-4"></i> Media
+        </div>
+        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+      </button>
+      <div
+        id="media-sub"
+        class="{% if '/media/' not in request.path %}hidden{% endif %} pl-11 py-2 space-y-3"
+      >
+        <a
+          href="{% url 'media_library' %}"
+          class="block text-[10px] font-bold text-white/40 hover:text-accent uppercase transition-colors"
+          >Library</a
+        >
+        <a
+          href="{% url 'add_media' %}"
+          class="block text-[10px] font-bold text-white/40 hover:text-accent uppercase transition-colors"
+          >Add Media</a
+        >
+      </div>
+    </div>
+
+    <div>
+      <button
+        onclick="toggleSub('post-sub')"
+        class="w-full flex items-center justify-between px-4 py-3 rounded {% if '/posts/' in request.path or '/add-post/' in request.path %}text-accent bg-white/10{% else %}text-white/60 hover:bg-white/5 hover:text-white{% endif %} transition-all text-[11px] font-bold uppercase tracking-widest"
+      >
+        <div class="flex items-center gap-3">
+          <i data-lucide="pen-tool" class="w-4 h-4"></i> Posts
+        </div>
+        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+      </button>
+      <div
+        id="post-sub"
+        class="{% if '/posts/' not in request.path and '/add-post/' not in request.path %}hidden{% endif %} pl-11 py-2 space-y-3"
+      >
+        <a
+          href="{% url 'posts' %}"
+          class="block text-[10px] font-bold {% if request.path == '/posts/' %}text-accent{% else %}text-white/40{% endif %} hover:text-accent uppercase transition-colors"
+          >All Posts</a
+        >
+        <a
+          href="{% url 'add_post' %}"
+          class="block text-[10px] font-bold {% if request.path == '/add-post/' %}text-accent{% else %}text-white/40{% endif %} hover:text-accent uppercase transition-colors"
+          >Add Post</a
+        >
+        <a
+          href="{% url 'categories' %}"
+          class="block text-[10px] font-bold text-white/40 hover:text-accent uppercase transition-colors"
+          >Categories</a
+        >
+      </div>
+    </div>
+
+    <a
+      href="{% url 'comments' %}"
+      class="nav-link flex items-center gap-3 px-4 py-3 rounded text-white/60 hover:bg-white/5 hover:text-white transition-all text-[11px] font-bold uppercase tracking-widest {% if '/comments/' in request.path %}text-accent bg-white/10{% endif %}"
+    >
+      <i data-lucide="message-square" class="w-4 h-4"></i> Comments
+    </a>
+
+    <a
+      href="#"
+      class="nav-link flex items-center gap-3 px-4 py-3 rounded text-white/60 hover:bg-white/5 hover:text-white transition-all text-[11px] font-bold uppercase tracking-widest"
+    >
+      <i data-lucide="quote" class="w-4 h-4"></i> Testimonials
+    </a>
+
+    <a
+      href="#"
+      class="nav-link flex items-center gap-3 px-4 py-3 rounded text-white/60 hover:bg-white/5 hover:text-white transition-all text-[11px] font-bold uppercase tracking-widest"
+    >
+      <i data-lucide="award" class="w-4 h-4"></i> Team
+    </a>
+
+    <a
+      href="#"
+      class="nav-link flex items-center gap-3 px-4 py-3 rounded text-white/60 hover:bg-white/5 hover:text-white transition-all text-[11px] font-bold uppercase tracking-widest"
+    >
+      <i data-lucide="user-plus" class="w-4 h-4"></i> Users
+    </a>
+  </nav>
+
+  <div class="p-6 border-t border-white/5">
+    <a
+      href="#"
+      class="flex items-center gap-3 px-4 py-3 rounded bg-white/5 text-[10px] font-bold uppercase tracking-widest text-white/50 hover:text-red-400 hover:bg-red-400/10 transition-all"
+    >
+      <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+    </a>
+  </div>
+</aside>
+
+<script>
+  /**
+   * Sidebar Submenu Toggle logic
+   */
+  function toggleSub(id) {
+    const submenu = document.getElementById(id);
+    const allSubmenus = ['post-sub', 'media-sub']; // Add other submenus here if needed
+
+    // Optional: Close other submenus when opening a new one
+    /*
+        allSubmenus.forEach(menuId => {
+            if(menuId !== id) document.getElementById(menuId).classList.add('hidden');
+        });
+        */
+
+    if (submenu) {
+      submenu.classList.toggle('hidden');
+    }
+  }
+</script>

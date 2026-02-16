@@ -1,0 +1,172 @@
+<nav class="fixed w-full z-[100] bg-white border-b border-slate-100">
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2">
+      <div class="bg-royal p-1.5 rounded shadow-sm">
+        <i data-lucide="stethoscope" class="text-white w-5 h-5"></i>
+      </div>
+      <span class="text-lg font-bold text-royal tracking-tighter uppercase"
+        >dr.Jakpa</span
+      >
+    </a>
+
+    <div
+      class="hidden lg:flex items-center gap-8 font-bold text-[11px] uppercase tracking-widest text-slate-400"
+    >
+      <a href="{% url 'home' %}" class="hover:text-royal transition-all"
+        >Home</a
+      >
+      <a href="{% url 'about' %}" class="hover:text-royal transition-all"
+        >About</a
+      >
+      <a href="{% url 'services' %}" class="hover:text-royal transition-all"
+        >Services</a
+      >
+      <a href="{% url 'bookings' %}" class="hover:text-royal transition-all"
+        >Bookings</a
+      >
+      <a href="{% url 'blog' %}" class="hover:text-royal transition-all">Blog</a>
+
+      <a href="{% url 'contact' %}" class="hover:text-royal transition-all"
+        >Contact</a
+      >
+    </div>
+
+    <div class="flex items-center gap-4">
+      <button
+        onclick="scrollToId('eligibility')"
+        class="hidden sm:block bg-accent hover:bg-orange-600 text-white font-black py-2.5 px-6 rounded text-[10px] transition-all shadow-md shadow-orange-100 uppercase tracking-widest"
+      >
+        Check Eligibility
+      </button>
+
+      <button
+        id="jakpaSidebar-trigger"
+        class="lg:hidden p-2 text-royal focus:outline-none"
+      >
+        <i data-lucide="menu" class="w-7 h-7"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div
+  id="jakpaSidebar-backdrop"
+  class="fixed inset-0 bg-royal/40 backdrop-blur-sm z-[110] opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
+></div>
+
+<div
+  id="jakpaSidebar-menu"
+  class="fixed top-0 right-0 h-full w-[280px] sm:w-[350px] bg-white z-[120] shadow-2xl transform translate-x-full transition-transform duration-500 ease-in-out lg:hidden flex flex-col"
+>
+  <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+    <span class="text-lg font-bold text-royal tracking-tighter uppercase"
+      >dr.Jakpa</span
+    >
+    <button
+      id="jakpaSidebar-close"
+      class="p-2 text-slate-400 hover:text-royal transition-colors"
+    >
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+  </div>
+
+  <div class="p-8 flex flex-col gap-6">
+    <a
+      href="{% url 'home' %}"
+      class="jakpaSidebar-link text-lg font-bold text-royal hover:text-accent transition-colors uppercase tracking-tighter"
+      >Home</a
+    >
+    <a
+      href="{% url 'about' %}"
+      class="jakpaSidebar-link text-lg font-bold text-royal hover:text-accent transition-colors uppercase tracking-tighter"
+      >About</a
+    >
+    <a
+      href="{% url 'services' %}"
+      class="jakpaSidebar-link text-lg font-bold text-royal hover:text-accent transition-colors uppercase tracking-tighter"
+      >Services</a
+    >
+    <a
+      href="{% url 'bookings' %}"
+      class="jakpaSidebar-link text-lg font-bold text-royal hover:text-accent transition-colors uppercase tracking-tighter"
+      >Bookings</a
+    >
+    <a
+      href="{% url 'blog' %}"
+      class="jakpaSidebar-link text-lg font-bold text-royal hover:text-accent transition-colors uppercase tracking-tighter"
+      >Blog</a
+    >
+    <a
+      href="{% url 'contact' %}"
+      class="jakpaSidebar-link text-lg font-bold text-royal hover:text-accent transition-colors uppercase tracking-tighter"
+      >Contact</a
+    >
+
+    <div class="h-px bg-slate-100 my-4"></div>
+
+    <button
+      onclick="scrollToId('eligibility')"
+      class="w-full bg-accent text-white font-black py-4 rounded-lg text-[10px] uppercase tracking-widest shadow-lg shadow-orange-100"
+    >
+      Check Eligibility
+    </button>
+  </div>
+
+  <div class="mt-auto p-8 bg-slate-50">
+    <h4
+      class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-4"
+    >
+      Official Channels
+    </h4>
+    <div class="flex gap-5 text-royal">
+      <a href="#" class="hover:text-accent transition-colors"
+        ><i data-lucide="instagram" class="w-5 h-5"></i
+      ></a>
+      <a href="#" class="hover:text-accent transition-colors"
+        ><i data-lucide="linkedin" class="w-5 h-5"></i
+      ></a>
+      <a href="#" class="hover:text-accent transition-colors"
+        ><i data-lucide="twitter" class="w-5 h-5"></i
+      ></a>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  const jakpaSidebarEngine = {
+    init() {
+      const trigger = document.getElementById('jakpaSidebar-trigger');
+      const closeBtn = document.getElementById('jakpaSidebar-close');
+      const backdrop = document.getElementById('jakpaSidebar-backdrop');
+      const menu = document.getElementById('jakpaSidebar-menu');
+      const links = document.querySelectorAll('.jakpaSidebar-link');
+
+      if (!trigger || !menu || !backdrop) return;
+
+      const openSidebar = () => {
+        menu.classList.remove('translate-x-full');
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        document.documentElement.classList.add('overflow-hidden');
+      };
+
+      const closeSidebar = () => {
+        menu.classList.add('translate-x-full');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        document.documentElement.classList.remove('overflow-hidden');
+      };
+
+      trigger.addEventListener('click', openSidebar);
+      closeBtn.addEventListener('click', closeSidebar);
+      backdrop.addEventListener('click', closeSidebar);
+
+      links.forEach((link) => {
+        link.addEventListener('click', closeSidebar);
+      });
+    },
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    jakpaSidebarEngine.init();
+  });
+</script>

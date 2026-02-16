@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 30px 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f97316;
+        }
+        .message {
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #fef3c7;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #f97316;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="header">
+                <div class="logo">Dr. Jakpa</div>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Medical Licensing & Relocation Support</p>
+            </div>
+            
+            <div class="message">
+                <p>Dear {{ full_name }},</p>
+                
+                <p>Thank you for reaching out to Dr. Jakpa! We have successfully received your inquiry.</p>
+                
+                <div class="highlight">
+                    <strong>What happens next?</strong><br>
+                    Our team is reviewing your submission and will respond within 24-48 hours with specific guidance tailored to your situation.
+                </div>
+                
+                <p>In the meantime, feel free to explore our resources on medical licensing, German language training, and hospital placements for Nigerian medical professionals.</p>
+                
+                <p>If you have any urgent questions, please don't hesitate to reach out directly to <a href="mailto:info@drjakpa.com" style="color: #1e3a8a;">info@drjakpa.com</a>.</p>
+                
+                <p style="margin-top: 25px;">
+                    Best regards,<br>
+                    <strong>The Dr. Jakpa Team</strong>
+                </p>
+            </div>
+            
+            <div class="footer">
+                <p>This is an automated confirmation email. Please do not reply directly to this message.</p>
+                <p style="margin-top: 10px;">
+                    Connect with us: 
+                    <a href="#" style="color: #1e3a8a; text-decoration: none;">LinkedIn</a> | 
+                    <a href="#" style="color: #1e3a8a; text-decoration: none;">Instagram</a> | 
+                    <a href="#" style="color: #1e3a8a; text-decoration: none;">Twitter</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

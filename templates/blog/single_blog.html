@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ single_post.title }} - Dr. Jakpa{% endblock %}
+
+{% block description %}{{ single_post.excerpt|default:single_post.content|striptags|truncatewords:30 }}{% endblock %}
+
+{% block keywords %}{{ single_post.title }}, {% for cat in single_post.category.all %}{{ cat.name }}, {% endfor %}medical migration Germany, Approbation, German medical licensing{% endblock %}
+
+{% block canonical %}https://drjakpa.com/blog/{{ single_post.slug }}/{% endblock %}
+
+{% block og_title %}{{ single_post.title }} - Dr. Jakpa{% endblock %}
+
+{% block og_description %}{{ single_post.excerpt|default:single_post.content|striptags|truncatewords:30 }}{% endblock %}
+
+{% block og_image %}{% if single_post.featured_image %}{{ single_post.featured_image.url }}{% else %}{% static 'images/home.webp' %}{% endif %}{% endblock %}
+
+{% block content %}
+
+<div id="progress-container">
+  <div id="progress-bar"></div>
+</div>
+
+<header class="pt-40 pb-16 bg-neutralBg border-b border-slate-200">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <!-- Breadcrumb -->
+    <nav class="reveal flex items-center justify-center gap-2 mb-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+      <a href="/" class="hover:text-royal transition-colors">Home</a>
+      <i data-lucide="chevron-right" class="w-3 h-3"></i>
+      <a href="{% url 'blog' %}" class="hover:text-royal transition-colors">Blog</a>
+      <i data-lucide="chevron-right" class="w-3 h-3"></i>
+      <span class="text-royal">{{ single_post.title|truncatewords:5 }}</span>
+    </nav>
+    
+    <div class="reveal flex justify-center items-center flex-wrap gap-3 mb-6 text-[10px] font-bold text-accent uppercase tracking-[0.3em]">
+      {% for cat in single_post.category.all %}
+      <span>{{ cat.name }}</span>
+      {% if not forloop.last %}
+      <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+      {% endif %}
+      {% endfor %}
+      
+      <span class="text-slate-300 mx-1">|</span>
+      
+      <div class="flex items-center gap-3 text-slate-400">
+        <span class="font-bold">{{single_post.read_time}} Min Read</span>
+        <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="message-square" class="w-3.5 h-3.5 text-accent"></i>
+          <span class="font-bold">{{ total_comments }}</span>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="reveal text-3xl md:text-5xl font-extrabold text-royal leading-tight mb-10 uppercase tracking-tighter" style="transition-delay: 100ms">
+      {{ single_post.title }}
+    </h1>
+
+    <div class="reveal flex flex-col md:flex-row justify-center items-center gap-6" style="transition-delay: 200ms">
+      <div class="flex items-center gap-3">
+        {% if single_post.author.profile.profile_image %}
+        <img src="{{ single_post.author.profile.profile_image.url }}" alt="{{ single_post.author_display_name }}" class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm grayscale hover:grayscale-0 transition-all duration-500" />
+        {% else %}
+        <div class="w-10 h-10 rounded-full bg-royal text-white flex items-center justify-center font-black text-xs">
+          {{ single_post.author_display_name|first|upper }}
+        </div>
+        {% endif %}
+
+        <div class="text-left">
+          <p class="text-[11px] font-black text-royal uppercase tracking-tight">
+            By <a href="#" class="text-accent hover:underline">{{ single_post.author_display_name }}</a>
+          </p>
+          <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
+            {{single_post.author.username}}
+          </p>
+        </div>
+      </div>
+
+      <div class="hidden md:block w-px h-8 bg-slate-200"></div>
+
+      <div class="text-left md:text-left">
+        <p class="text-[10px] font-bold text-royal uppercase tracking-widest">Updated On</p>
+        <p class="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{{ single_post.published_date|date:"M d, Y" }}</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ single_post.title }}",
+  "image": "{% if single_post.featured_image %}{{ request.scheme }}://{{ request.get_host }}{{ single_post.featured_image.url }}{% endif %}",
+  "datePublished": "{{ single_post.published_date|date:'c' }}",
+  "dateModified": "{{ single_post.updated_at|date:'c' }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ single_post.author_display_name }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Dr. Jakpa",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/home.webp' %}"
+    }
+  },
+  "description": "{{ single_post.excerpt|default:single_post.content|striptags|truncatewords:30 }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ request.scheme }}://{{ request.get_host }}/blog/{{ single_post.slug }}/"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ single_post.title }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/blog/{{ single_post.slug }}/"
+    }
+  ]
+}
+</script>
+
+<div class="max-w-5xl mx-auto px-6 -mt-10 reveal" style="transition-delay: 300ms">
+  {% if single_post.featured_image %}
+  <div class="rounded-3xl overflow-hidden shadow-2xl border-[8px] border-white bg-white">
+    <img src="{{single_post.featured_image.url }}" alt="{{single_post.title}}" class="w-full h-[250px] md:h-[400px] object-cover" />
+  </div>
+  {% else %}
+  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-royal/10 to-accent/10"></div>
+  {% endif %}
+</div>
+
+<main class="py-20">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-12 gap-16 items-start">
+    
+    <aside class="hidden lg:block lg:col-span-1">
+      <div class="sticky-sidebar flex flex-col gap-4 items-center" style="position: sticky; top: 7rem; align-self: flex-start;">
+        <button id="shareFacebook" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all" title="Share on Facebook">
+          <i data-lucide="facebook" class="w-4 h-4"></i>
+        </button>
+        <button id="shareTwitter" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all" title="Share on Twitter">
+          <i data-lucide="twitter" class="w-4 h-4"></i>
+        </button>
+        <button id="shareLinkedIn" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-blue-700 hover:text-white hover:border-blue-700 transition-all" title="Share on LinkedIn">
+          <i data-lucide="linkedin" class="w-4 h-4"></i>
+        </button>
+        <button id="shareWhatsApp" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all" title="Share on WhatsApp">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+        </button>
+        <button id="shareTelegram" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-sky-400 hover:text-white hover:border-sky-400 transition-all" title="Share on Telegram">
+          <i data-lucide="send" class="w-4 h-4"></i>
+        </button>
+        <button id="shareThreads" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-black hover:text-white hover:border-black transition-all" title="Share on Threads">
+          <i data-lucide="at-sign" class="w-4 h-4"></i>
+        </button>
+        <button id="shareInstagram" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-pink-600 hover:text-white hover:border-pink-600 transition-all" title="Share on Instagram">
+          <i data-lucide="instagram" class="w-4 h-4"></i>
+        </button>
+        <div class="h-12 w-px bg-slate-100"></div>
+      </div>
+    </aside>
+
+    <div class="lg:col-span-7 article-content reveal">
+      {{ single_post.content|safe }}
+      
+      <hr class="my-16 border-slate-100" />
+
+      <section class="reveal bg-neutralBg p-8 md:p-12 rounded-3xl border border-slate-100 flex flex-col md:flex-row items-center gap-8 mb-20">
+        <div class="w-24 h-24 rounded-full overflow-hidden bg-royal shrink-0 border border-slate-100">
+            {% if single_post.author.profile.profile_image %}
+            <img 
+                src="{{ single_post.author.profile.profile_image.url }}" 
+                alt="{{ single_post.author_display_name }}" 
+                class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" 
+            />
+            {% else %}
+            <div class="w-full h-full bg-royal text-white flex items-center justify-center font-black text-xs">
+                {{ single_post.author_display_name|first|upper }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="text-center md:text-left">
+          <h4 class="text-xs font-black text-accent uppercase tracking-widest mb-1">About the Author</h4>
+          <h3 class="text-xl font-bold text-royal uppercase tracking-tighter mb-3">
+            {{ single_post.author.first_name }} {{ single_post.author.last_name }}
+          </h3>
+          <p class="text-[12px] text-slate-500 leading-relaxed font-light">
+            {{single_post.author.profile.bio|default:"Writer and content creator at dr. Jakpa Consults."}}
+          </p>
+        </div>
+      </section>
+
+      <section class="reveal" id="commentsSection">
+        <div class="flex items-center gap-4 mb-12">
+          <h2 class="text-[10px] font-black text-royal uppercase tracking-[0.3em] shrink-0">Comments ({{ total_comments }})</h2>
+          <div class="h-px bg-slate-100 w-full"></div>
+        </div>
+
+        <div id="commentsContainer" class="space-y-8 mb-16">
+          {% for comment in comments %}
+          <div class="comment flex gap-4 p-6 bg-white border border-slate-100 rounded-2xl shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-royal/10 text-royal flex items-center justify-center font-bold text-xs shrink-0">{{ comment.name|first|upper }}</div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between gap-3 mb-2">
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-bold text-royal uppercase">{{ comment.name }}</span>
+                  <span class="text-[9px] text-slate-300 font-bold uppercase">{{ comment.created_on|date:"M d, Y" }}</span>
+                </div>
+                <button class="reply-btn text-[9px] font-bold text-accent uppercase tracking-widest hover:underline" data-comment-id="{{ comment.id }}">Reply</button>
+              </div>
+              <p class="text-xs text-slate-500 leading-relaxed">{{ comment.body }}</p>
+
+              <div class="comment-reply-form" id="replyForm-{{ comment.id }}">
+                <form method="POST" class="mt-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                  {% csrf_token %}
+                  <input type="hidden" name="parent_id" value="{{ comment.id }}" />
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <input type="text" name="name" placeholder="Your Name" required class="w-full bg-white border border-slate-200 rounded py-2 px-3 text-xs outline-none focus:border-royal transition-all" />
+                    <input type="email" name="email" placeholder="Your Email" required class="w-full bg-white border border-slate-200 rounded py-2 px-3 text-xs outline-none focus:border-royal transition-all" />
+                  </div>
+                  <textarea name="body" rows="3" placeholder="Your reply..." required class="w-full bg-white border border-slate-200 rounded py-2 px-3 text-xs outline-none focus:border-royal transition-all resize-none mb-3"></textarea>
+                  <div class="flex gap-2">
+                    <button type="submit" class="bg-royal text-white font-black py-2 px-6 rounded text-[9px] uppercase tracking-widest hover:bg-royal/90 transition-all">Post Reply</button>
+                    <button type="button" class="cancel-reply text-[9px] font-bold text-slate-400 uppercase tracking-widest hover:text-royal">Cancel</button>
+                  </div>
+                </form>
+              </div>
+
+              {% if comment.replies.all %}
+              <div class="mt-4 pl-6 border-l-2 border-slate-100 space-y-4">
+                {% for reply in comment.replies.all %}
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center font-bold text-[10px] shrink-0">{{ reply.name|first|upper }}</div>
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="text-[10px] font-bold text-royal uppercase">{{ reply.name }}</span>
+                      <span class="text-[8px] text-slate-300 font-bold uppercase">{{ reply.created_on|date:"M d, Y" }}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">{{ reply.body }}</p>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% empty %}
+          <p class="text-center text-slate-400 text-xs py-8">No comments yet. Be the first to comment!</p>
+          {% endfor %}
+        </div>
+
+        <div class="bg-slate-50 p-8 md:p-12 rounded-3xl border border-slate-100">
+          <h4 class="text-xs font-black text-royal uppercase tracking-widest mb-8">Leave a Comment</h4>
+          <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% csrf_token %}
+            <div class="space-y-2">
+              <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
+              <input type="text" name="name" required class="w-full bg-white border border-slate-200 rounded-lg py-3 px-4 text-xs outline-none focus:border-royal transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Email</label>
+              <input type="email" name="email" required class="w-full bg-white border border-slate-200 rounded-lg py-3 px-4 text-xs outline-none focus:border-royal transition-all" />
+            </div>
+            <div class="md:col-span-2 space-y-2">
+              <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Comment</label>
+              <textarea name="body" rows="5" required class="w-full bg-white border border-slate-200 rounded-lg py-4 px-4 text-xs outline-none focus:border-royal transition-all resize-none"></textarea>
+            </div>
+            <div class="md:col-span-2">
+              <button type="submit" class="bg-royal text-white font-black py-4 px-10 rounded-lg text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-royal/10 hover:bg-royal/90 transition-all">Post Comment</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <aside class="lg:col-span-4">
+      <div class="sticky-sidebar space-y-10" style="position: sticky; top: 7rem; align-self: flex-start;">
+        <div class="reveal">
+          <h4 class="text-xs font-bold text-royal uppercase tracking-[0.2em] mb-8 flex items-center gap-3">
+            Related Insights <span class="h-px flex-1 bg-slate-100"></span>
+          </h4>
+          <div class="space-y-8">
+            {% for post in related_posts %}
+            <a href="{% url 'posts_by_category_or_post' post.slug %}" class="group block">
+              {% for cat in post.category.all|slice:":1" %}
+              <span class="text-accent text-[10px] font-bold uppercase tracking-widest block mb-2">{{ cat.name }}</span>
+              {% endfor %}
+              <h5 class="text-sm font-bold text-royal group-hover:text-accent transition-colors leading-snug">{{ post.title }}</h5>
+            </a>
+            {% empty %}
+            <p class="text-xs text-slate-400">No related articles found.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script src="{% static 'js/single_blog.js' %}"></script>
+{% endblock %}

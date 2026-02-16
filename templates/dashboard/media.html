@@ -1,0 +1,253 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Media Library | dr.Jakpa {% endblock %}
+
+{% block content %}
+<div class="max-w-full">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+        <div>
+            <h1 class="text-2xl font-black text-royal uppercase tracking-tighter">Media Library</h1>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage images, videos and documents.</p>
+        </div>
+        <button id="add-media-btn" class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-black text-[10px] uppercase tracking-widest rounded-lg hover:bg-orange-600 shadow-lg shadow-orange-100 transition-all">
+            <i data-lucide="upload" class="w-4 h-4"></i>
+            Add Media
+        </button>
+    </div>
+
+    <div id="upload-box" class="hidden bg-white border border-slate-200 rounded-2xl p-8 mb-8 shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-sm font-black text-royal uppercase tracking-widest">Upload Files</h3>
+            <button id="close-upload-btn" class="text-slate-300 hover:text-red-500 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        
+        <form id="upload-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="drop-zone" class="border-2 border-dashed border-slate-200 bg-slate-50/50 rounded-2xl p-12 text-center hover:border-royal transition-all cursor-pointer group">
+                <div class="mb-4">
+                    <i data-lucide="cloud-upload" class="w-12 h-12 text-slate-300 mx-auto group-hover:text-royal transition-colors"></i>
+                </div>
+                <div class="mb-4">
+                    <label for="file-input" class="cursor-pointer">
+                        <span class="text-sm font-black text-royal uppercase tracking-tight">Drop files here or click to browse</span>
+                        <input type="file" id="file-input" name="files" multiple class="hidden" accept="*/*">
+                    </label>
+                </div>
+                <!-- <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Supports clinical documentation and media assets</p> -->
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button type="submit" id="upload-submit-btn" disabled
+                        class="px-8 py-3 bg-royal text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-royal/90 disabled:bg-slate-100 disabled:text-slate-300 disabled:cursor-not-allowed shadow-xl shadow-royal/10 transition-all">
+                    Start Bulk Upload
+                </button>
+            </div>
+        </form>
+        
+        <div id="upload-progress" class="hidden mt-6">
+            <div class="bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                <div id="progress-bar" class="bg-accent h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <p id="upload-status" class="text-[10px] font-bold text-slate-400 uppercase mt-3 tracking-widest">Processing uploads...</p>
+        </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-4 mb-8 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-1.5 p-1 bg-slate-50 rounded-lg">
+                    <button id="view-list" class="p-2 text-slate-400 hover:text-royal transition-all rounded-md">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                    </button>
+                    <button id="view-grid" class="p-2 bg-white text-royal shadow-sm rounded-md border border-slate-100">
+                        <i data-lucide="grid-3x3" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                
+                <select id="media-type-filter" class="bg-slate-50 border border-slate-200 text-royal font-bold rounded-lg px-4 py-2.5 text-[10px] uppercase tracking-widest focus:border-royal outline-none">
+                    <option value="all" {% if media_type == 'all' %}selected{% endif %}>All Media Types</option>
+                    <option value="image" {% if media_type == 'image' %}selected{% endif %}>Images ({{ media_counts.image }})</option>
+                    <option value="document" {% if media_type == 'document' %}selected{% endif %}>Documents ({{ media_counts.document }})</option>
+                    <option value="video" {% if media_type == 'video' %}selected{% endif %}>Videos ({{ media_counts.video }})</option>
+                    <option value="audio" {% if media_type == 'audio' %}selected{% endif %}>Audio ({{ media_counts.audio }})</option>
+                </select>
+                
+                <select id="date-filter" class="bg-slate-50 border border-slate-200 text-royal font-bold rounded-lg px-4 py-2.5 text-[10px] uppercase tracking-widest focus:border-royal outline-none">
+                    <option value="all">All Dates</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="bulk-select-btn" class="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest bg-white border border-slate-200 text-slate-400 rounded-lg hover:text-royal hover:border-royal transition-all">
+                    Bulk Select
+                </button>
+                <button id="bulk-delete-btn" class="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all hidden">
+                    Delete Selection
+                </button>
+                
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Search archive..." 
+                           value="{{ search_query }}"
+                           class="w-64 bg-slate-50 border border-slate-200 text-royal rounded-lg pl-10 pr-4 py-2.5 text-[11px] focus:border-royal outline-none placeholder-slate-300">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-300 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="media-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-10">
+        {% for media in media_files %}
+        <div class="media-item group relative bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-royal hover:shadow-lg transition-all cursor-pointer"
+             data-media-id="{{ media.id }}">
+            
+            <div class="absolute top-2 left-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity bulk-select-checkbox hidden">
+                <input type="checkbox" class="media-checkbox w-4 h-4 text-royal bg-white border-slate-300 rounded focus:ring-royal" 
+                       value="{{ media.id }}">
+            </div>
+
+            <div class="aspect-square relative overflow-hidden bg-slate-50">
+                {% if media.file_type == 'image' %}
+                    <img src="{{ media.file.url }}" alt="{{ media.alt_text }}" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center">
+                        {% if media.file_type == 'document' %}
+                            <i data-lucide="file-text" class="w-10 h-10 text-slate-200"></i>
+                        {% elif media.file_type == 'video' %}
+                            <i data-lucide="video" class="w-10 h-10 text-slate-200"></i>
+                        {% elif media.file_type == 'audio' %}
+                            <i data-lucide="music" class="w-10 h-10 text-slate-200"></i>
+                        {% else %}
+                            <i data-lucide="file" class="w-10 h-10 text-slate-200"></i>
+                        {% endif %}
+                    </div>
+                    {% if media.file_extension %}
+                    <div class="absolute bottom-2 right-2 bg-royal text-white text-[8px] px-1.5 py-0.5 rounded font-black uppercase tracking-widest">
+                        {{ media.file_extension }}
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="p-3 border-t border-slate-50 bg-white">
+                <p class="text-[10px] font-bold text-royal uppercase tracking-tight truncate" title="{{ media.file.name }}">
+                    {{ media.file.name|slice:":15" }}{% if media.file.name|length > 15 %}...{% endif %}
+                </p>
+                <p class="text-[8px] font-black text-slate-300 uppercase mt-0.5 tracking-widest">{{ media.file_size }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-24 bg-white border border-slate-100 rounded-3xl">
+            <i data-lucide="folder-open" class="w-16 h-16 text-slate-100 mx-auto mb-4"></i>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6">No media found.</p>
+            <button id="upload-first-btn" class="inline-flex items-center gap-2 px-8 py-3 bg-royal text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-royal/90 shadow-xl shadow-royal/10">
+                <i data-lucide="upload" class="w-4 h-4"></i>
+                Upload First Asset
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if has_next %}
+    <div class="text-center mt-12 mb-10">
+        <button id="load-more-btn" 
+                data-next-page="{{ next_page_number }}"
+                class="inline-flex items-center gap-2 px-10 py-4 bg-white border border-slate-200 text-royal font-black text-[10px] uppercase tracking-widest rounded-lg hover:bg-slate-50 shadow-sm transition-all">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Load More
+        </button>
+    </div>
+    {% endif %}
+
+    <div id="media-modal" class="fixed inset-0 z-[120] hidden overflow-y-auto">
+        <div class="fixed inset-0 bg-royal/40 backdrop-blur-sm" id="modal-overlay"></div>
+        
+        <div class="flex items-center justify-center min-h-screen px-4 py-8">
+            <div class="relative bg-white rounded-[2rem] shadow-2xl max-w-5xl w-full overflow-hidden border border-slate-100">
+                <div class="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50">
+                    <h3 class="text-xs font-black text-royal uppercase tracking-[0.2em]">Media Detail</h3>
+                    <button id="close-modal" class="text-slate-400 hover:text-royal transition-colors">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <div class="p-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                        <div class="lg:col-span-7">
+                            <div id="modal-preview" class="border border-slate-100 rounded-3xl p-6 min-h-[400px] flex items-center justify-center bg-neutralBg shadow-inner">
+                                </div>
+                        </div>
+
+                        <div class="lg:col-span-5 space-y-6">
+                            <div id="media-info" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest space-y-3 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                                </div>
+
+                            <form id="media-update-form" class="space-y-6">
+                                <div>
+                                    <label class="block text-[10px] font-black text-royal uppercase tracking-widest mb-3">Alternative Meta Text</label>
+                                    <textarea id="alt-text-input" rows="2" 
+                                              class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-600 focus:border-royal outline-none transition-all placeholder-slate-200"
+                                              placeholder="Clinical description for accessibility..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] font-black text-royal uppercase tracking-widest mb-3">Description</label>
+                                    <textarea id="description-input" rows="3" 
+                                              class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-600 focus:border-royal outline-none transition-all placeholder-slate-200"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] font-black text-royal uppercase tracking-widest mb-3">URL</label>
+                                    <div class="flex">
+                                        <input type="text" id="file-url-input" readonly 
+                                               class="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 border-r-0 rounded-l-xl text-[10px] font-bold text-slate-400 outline-none">
+                                        <button type="button" id="copy-url-btn" 
+                                                class="px-6 py-3 bg-royal text-white text-[10px] font-black uppercase tracking-widest rounded-r-xl hover:bg-royal/90 transition-all">
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between pt-6 border-t border-slate-100">
+                                    <button type="button" id="delete-media-btn" 
+                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 rounded-lg transition-all">
+                                        Delete Media
+                                    </button>
+                                    <button type="submit" 
+                                            class="px-8 py-3 bg-royal text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-royal/90 shadow-xl shadow-royal/10 transition-all">
+                                        Update 
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.mediaLibraryUrls = {
+    upload: "{% url 'media_upload' %}",
+    update: "{% url 'media_update' 0 %}".replace('/0/', '/'),
+    delete: "{% url 'media_delete' 0 %}".replace('/0/', '/'),
+    bulkDelete: "{% url 'media_bulk_delete' %}",
+    csrfToken: "{{ csrf_token }}"
+};
+</script>
+<script src="{% static 'js/dashboard/media_manager.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}
