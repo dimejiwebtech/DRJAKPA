@@ -2,205 +2,372 @@
 
 {% load static %} 
 
-{% block title %}Dashboard | dr.Jakpa{% endblock %} 
+{% load dashboard_user_roles %} {% block title %}Dashboard | dr.Jakpa{% endblock %} 
 
 {% block content %}
 <div class="max-w-full">
   <div class="mb-10">
-    <h1 class="text-2xl font-black text-royal uppercase tracking-tighter">Dashboard</h1>
-    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+    <h1 class="text-2xl font-black text-royal uppercase tracking-tighter">
+      Dashboard
+    </h1>
+    <p
+      class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1"
+    >
       Welcome back! Here's what's happening with your platform.
     </p>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 group transition-all">
+  {% user_is_administrator request.user as is_admin %}
+
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 {% if is_admin %}lg:grid-cols-4{% else %}lg:grid-cols-2{% endif %} gap-6 mb-10"
+  >
+    <div
+      class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 group transition-all"
+    >
       <div class="flex items-center justify-between mb-4">
-        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
+        <div
+          class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center"
+        >
           <i data-lucide="file-text" class="w-6 h-6 text-royal"></i>
         </div>
-        <a href="{% url 'posts' %}" class="text-[9px] font-black text-slate-400 uppercase hover:text-royal transition-colors">View All →</a>
+        <a
+          href="{% url 'posts' %}"
+          class="text-[9px] font-black text-slate-400 uppercase hover:text-royal transition-colors"
+          >View All →</a
+        >
       </div>
       <h3 class="text-3xl font-black text-royal mb-2">{{ total_posts }}</h3>
-      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Total Posts</p>
+      <p
+        class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3"
+      >
+        Total Posts
+      </p>
       <div class="flex gap-4 text-[9px] font-bold uppercase tracking-tight">
         <span class="text-green-600">{{ published_posts }} Published</span>
         <span class="text-orange-600">{{ draft_posts }} Drafts</span>
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 group transition-all">
+    <div
+      class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 group transition-all"
+    >
       <div class="flex items-center justify-between mb-4">
-        <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center">
+        <div
+          class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center"
+        >
           <i data-lucide="message-square" class="w-6 h-6 text-purple-700"></i>
         </div>
-        <a href="{% url 'comments' %}" class="text-[9px] font-black text-slate-400 uppercase hover:text-royal transition-colors">Manage →</a>
+        <a
+          href="{% url 'comments' %}"
+          class="text-[9px] font-black text-slate-400 uppercase hover:text-royal transition-colors"
+          >Manage →</a
+        >
       </div>
       <h3 class="text-3xl font-black text-royal mb-2">{{ total_comments }}</h3>
-      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Total Comments</p>
+      <p
+        class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3"
+      >
+        Total Comments
+      </p>
       <div class="flex gap-4 text-[9px] font-bold uppercase tracking-tight">
         <span class="text-orange-600">{{ pending_comments }} Pending</span>
         <span class="text-green-600">{{ approved_comments }} Approved</span>
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 group transition-all">
+    {% if is_admin %}
+    <div
+      class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 group transition-all"
+    >
       <div class="flex items-center justify-between mb-4">
-        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center">
+        <div
+          class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center"
+        >
           <i data-lucide="calendar-check" class="w-6 h-6 text-accent"></i>
         </div>
-        <a href="{% url 'bookings_list' %}" class="text-[9px] font-black text-slate-400 uppercase hover:text-royal transition-colors">View All →</a>
+        <a
+          href="{% url 'bookings_list' %}"
+          class="text-[9px] font-black text-slate-400 uppercase hover:text-royal transition-colors"
+          >View All →</a
+        >
       </div>
       <h3 class="text-3xl font-black text-royal mb-2">{{ total_bookings }}</h3>
-      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Total Bookings</p>
+      <p
+        class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3"
+      >
+        Total Bookings
+      </p>
       <div class="flex gap-4 text-[9px] font-bold uppercase tracking-tight">
         <span class="text-orange-600">{{ pending_bookings }} Pending</span>
         <span class="text-blue-600">{{ ongoing_bookings }} Ongoing</span>
       </div>
     </div>
 
-    <div class="bg-gradient-to-br from-royal to-blue-800 rounded-2xl shadow-lg p-6 text-white group transition-all">
+    <div
+      class="bg-gradient-to-br from-royal to-blue-800 rounded-2xl shadow-lg p-6 text-white group transition-all"
+    >
       <div class="flex items-center justify-between mb-4">
-        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
+        <div
+          class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center"
+        >
           <i data-lucide="dollar-sign" class="w-6 h-6 text-white"></i>
         </div>
         <i data-lucide="trending-up" class="w-5 h-5 text-white/40"></i>
       </div>
-      <h3 class="text-3xl font-black mb-2">₦{{ total_revenue|floatformat:0 }}</h3>
-      <p class="text-[10px] font-black text-white/70 uppercase tracking-widest mb-3">Total Revenue</p>
+      <h3 class="text-3xl font-black mb-2">
+        ₦{{ total_revenue|floatformat:0 }}
+      </h3>
+      <p
+        class="text-[10px] font-black text-white/70 uppercase tracking-widest mb-3"
+      >
+        Total Revenue
+      </p>
       <div class="text-[9px] font-bold text-white/50 uppercase tracking-tight">
         From {{ completed_bookings }} completed bookings
       </div>
     </div>
+    {% endif %}
   </div>
 
   <div class="grid lg:grid-cols-12 gap-8 mb-10">
-    
     <div class="lg:col-span-8">
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-royal rounded-lg flex items-center justify-center">
-                    <i data-lucide="activity" class="w-4 h-4 text-white"></i>
-                </div>
-                <div>
-                    <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">Traffic Overview</h3>
-                    <p class="text-[8px] font-bold text-slate-400 uppercase">Last 7 Days</p>
-                </div>
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+      >
+        <div
+          class="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 bg-royal rounded-lg flex items-center justify-center"
+            >
+              <i data-lucide="activity" class="w-4 h-4 text-white"></i>
             </div>
-            <a href="{% url 'analytics:traffic_stats' %}" class="text-[9px] font-black text-royal hover:text-accent uppercase tracking-widest transition-colors">
-                View Full Analytics →
-            </a>
+            <div>
+              <h3
+                class="text-[11px] font-black text-royal uppercase tracking-widest"
+              >
+                Traffic Overview
+              </h3>
+              <p class="text-[8px] font-bold text-slate-400 uppercase">
+                Last 7 Days
+              </p>
+            </div>
+          </div>
+          <a
+            href="{% url 'analytics:traffic_stats' %}"
+            class="text-[9px] font-black text-royal hover:text-accent uppercase tracking-widest transition-colors"
+          >
+            View Full Analytics →
+          </a>
         </div>
         <div class="p-6 sm:p-10">
-            <div class="h-72 w-full">
-                <canvas id="dashboardTrafficChart"></canvas>
+          <div class="h-72 w-full">
+            <canvas id="dashboardTrafficChart"></canvas>
+          </div>
+          <div
+            class="grid grid-cols-2 gap-8 mt-10 pt-8 border-t border-slate-50"
+          >
+            <div class="text-center">
+              <p
+                class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2"
+              >
+                Total Views
+              </p>
+              <p
+                id="total-views-stat"
+                class="text-2xl font-black text-royal tracking-tighter"
+              >
+                --
+              </p>
             </div>
-            <div class="grid grid-cols-2 gap-8 mt-10 pt-8 border-t border-slate-50">
-                <div class="text-center">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Views</p>
-                    <p id="total-views-stat" class="text-2xl font-black text-royal tracking-tighter">--</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Visitors</p>
-                    <p id="total-visitors-stat" class="text-2xl font-black text-royal tracking-tighter">--</p>
-                </div>
+            <div class="text-center">
+              <p
+                class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2"
+              >
+                Total Visitors
+              </p>
+              <p
+                id="total-visitors-stat"
+                class="text-2xl font-black text-royal tracking-tighter"
+              >
+                --
+              </p>
             </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="lg:col-span-4 space-y-6">
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center shrink-0">
-                    <i data-lucide="clock" class="w-6 h-6 text-green-600"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Sessions</p>
-                    <h3 class="text-2xl font-black text-royal">{{ total_sessions }}</h3>
-                </div>
-            </div>
-            <div class="text-right">
-                <span class="text-[10px] font-black text-green-600 bg-green-50 px-2 py-1 rounded uppercase tracking-tighter">{{ available_sessions }} Free</span>
-            </div>
+      {% if is_admin %}
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center shrink-0"
+          >
+            <i data-lucide="clock" class="w-6 h-6 text-green-600"></i>
+          </div>
+          <div>
+            <p
+              class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
+            >
+              Sessions
+            </p>
+            <h3 class="text-2xl font-black text-royal">{{ total_sessions }}</h3>
+          </div>
         </div>
-
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center shrink-0">
-                    <i data-lucide="folder" class="w-6 h-6 text-indigo-600"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Categories</p>
-                    <h3 class="text-2xl font-black text-royal">{{ total_categories }}</h3>
-                </div>
-            </div>
-            <div class="text-right">
-                <span class="text-[10px] font-black text-slate-400 bg-slate-50 px-2 py-1 rounded uppercase tracking-tighter">{{ categories_with_posts }} In Use</span>
-            </div>
+        <div class="text-right">
+          <span
+            class="text-[10px] font-black text-green-600 bg-green-50 px-2 py-1 rounded uppercase tracking-tighter"
+            >{{ available_sessions }} Free</span
+          >
         </div>
+      </div>
+      {% endif %}
 
-
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center shrink-0"
+          >
+            <i data-lucide="folder" class="w-6 h-6 text-indigo-600"></i>
+          </div>
+          <div>
+            <p
+              class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
+            >
+              Categories
+            </p>
+            <h3 class="text-2xl font-black text-royal">
+              {{ total_categories }}
+            </h3>
+          </div>
+        </div>
+        <div class="text-right">
+          <span
+            class="text-[10px] font-black text-slate-400 bg-slate-50 px-2 py-1 rounded uppercase tracking-tighter"
+            >{{ categories_with_posts }} In Use</span
+          >
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="grid lg:grid-cols-2 gap-8 mb-10">
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-        <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">Recent Posts</h3>
-        <a href="{% url 'posts' %}" class="text-[9px] font-black text-accent hover:underline uppercase tracking-widest transition-all">View All</a>
+    <div
+      class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+    >
+      <div
+        class="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center"
+      >
+        <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">
+          Recent Posts
+        </h3>
+        <a
+          href="{% url 'posts' %}"
+          class="text-[9px] font-black text-accent hover:underline uppercase tracking-widest transition-all"
+          >View All</a
+        >
       </div>
       <div class="divide-y divide-slate-100">
         {% for post in recent_posts %}
         <div class="p-5 group">
           <div class="flex items-start justify-between gap-4">
             <div class="flex-1 min-w-0">
-              <h4 class="text-[11px] font-black text-royal uppercase tracking-tight mb-2 truncate group-hover:text-accent transition-colors">
+              <h4
+                class="text-[11px] font-black text-royal uppercase tracking-tight mb-2 truncate group-hover:text-accent transition-colors"
+              >
                 {{ post.title }}
               </h4>
-              <div class="flex items-center gap-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                <span class="flex items-center gap-1.5"><i data-lucide="folder" class="w-3 h-3"></i> {{ post.category.all.first.name|default:"General" }}</span>
-                <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3 h-3"></i> {{ post.published_date|date:"M d, Y" }}</span>
+              <div
+                class="flex items-center gap-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+              >
+                <span class="flex items-center gap-1.5"
+                  ><i data-lucide="folder" class="w-3 h-3"></i> {{
+                  post.category.all.first.name|default:"General" }}</span
+                >
+                <span class="flex items-center gap-1.5"
+                  ><i data-lucide="calendar" class="w-3 h-3"></i> {{
+                  post.published_date|date:"M d, Y" }}</span
+                >
               </div>
             </div>
-            <a href="{% url 'edit_post' post.id %}" class="p-2 text-slate-300 hover:text-royal transition-all">
-                <i data-lucide="edit-3" class="w-4 h-4"></i>
+            <a
+              href="{% url 'edit_post' post.id %}"
+              class="p-2 text-slate-300 hover:text-royal transition-all"
+            >
+              <i data-lucide="edit-3" class="w-4 h-4"></i>
             </a>
           </div>
         </div>
         {% empty %}
         <div class="p-12 text-center">
-          <i data-lucide="file-text" class="w-12 h-12 text-slate-100 mx-auto mb-4"></i>
-          <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">No entries available</p>
+          <i
+            data-lucide="file-text"
+            class="w-12 h-12 text-slate-100 mx-auto mb-4"
+          ></i>
+          <p
+            class="text-[11px] font-black text-slate-400 uppercase tracking-widest"
+          >
+            No entries available
+          </p>
         </div>
         {% endfor %}
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-        <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">Recent Bookings</h3>
-        <span class="px-2 py-1 bg-orange-100 text-accent text-[8px] font-black uppercase rounded">{{ pending_bookings }} Pending</span>
+    {% if is_admin %}
+    <div
+      class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+    >
+      <div
+        class="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center"
+      >
+        <h3 class="text-[11px] font-black text-royal uppercase tracking-widest">
+          Recent Bookings
+        </h3>
+        <span
+          class="px-2 py-1 bg-orange-100 text-accent text-[8px] font-black uppercase rounded"
+          >{{ pending_bookings }} Pending</span
+        >
       </div>
       <div class="divide-y divide-slate-100">
         {% for booking in recent_bookings %}
         <div class="p-5">
           <div class="flex items-center justify-between gap-4">
             <div class="flex items-center gap-4 min-w-0">
-              <div class="w-10 h-10 rounded-full bg-royal/5 text-royal flex items-center justify-center font-black text-[10px] uppercase shrink-0">
+              <div
+                class="w-10 h-10 rounded-full bg-royal/5 text-royal flex items-center justify-center font-black text-[10px] uppercase shrink-0"
+              >
                 {{ booking.full_name|slice:":2" }}
               </div>
               <div class="min-w-0">
-                <p class="text-[11px] font-black text-royal uppercase tracking-tight truncate">{{ booking.full_name }}</p>
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">
-                  {{ booking.session_time.date|date:"M d" }} • {{ booking.session_time.time|time:"h:i A" }}
+                <p
+                  class="text-[11px] font-black text-royal uppercase tracking-tight truncate"
+                >
+                  {{ booking.full_name }}
+                </p>
+                <p
+                  class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1"
+                >
+                  {{ booking.session_time.date|date:"M d" }} • {{
+                  booking.session_time.time|time:"h:i A" }}
                 </p>
               </div>
             </div>
             <div class="text-right shrink-0">
-              <p class="text-[11px] font-black text-royal mb-1">₦{{ booking.total_price|floatformat:0 }}</p>
-              <span class="text-[8px] font-black uppercase px-2 py-0.5 rounded-full {% if booking.status == 'pending' %}bg-orange-100 text-orange-600 {% else %}bg-blue-100 text-blue-700{% endif %}">
+              <p class="text-[11px] font-black text-royal mb-1">
+                ₦{{ booking.total_price|floatformat:0 }}
+              </p>
+              <span
+                class="text-[8px] font-black uppercase px-2 py-0.5 rounded-full {% if booking.status == 'pending' %}bg-orange-100 text-orange-600 {% else %}bg-blue-100 text-blue-700{% endif %}"
+              >
                 {{ booking.get_status_display }}
               </span>
             </div>
@@ -208,123 +375,145 @@
         </div>
         {% empty %}
         <div class="p-12 text-center">
-          <i data-lucide="calendar-x" class="w-12 h-12 text-slate-100 mx-auto mb-4"></i>
-          <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">No active bookings</p>
+          <i
+            data-lucide="calendar-x"
+            class="w-12 h-12 text-slate-100 mx-auto mb-4"
+          ></i>
+          <p
+            class="text-[11px] font-black text-slate-400 uppercase tracking-widest"
+          >
+            No active bookings
+          </p>
         </div>
         {% endfor %}
       </div>
     </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %} 
 
 {% block scripts %}
 <script>
-    let dashboardTrafficChart;
+  let dashboardTrafficChart;
 
-    document.addEventListener('DOMContentLoaded', () => {
-        lucide.createIcons();
-        initializeDashboardTrafficChart();
-        loadDashboardTrafficData();
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    initializeDashboardTrafficChart();
+    loadDashboardTrafficData();
+  });
+
+  function initializeDashboardTrafficChart() {
+    const ctx = document.getElementById('dashboardTrafficChart');
+    if (!ctx) return;
+
+    dashboardTrafficChart = new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Views',
+            data: [],
+            backgroundColor: '#1E3A8A', // dr.Jakpa Royal Blue
+            borderRadius: 4,
+            barThickness: 16,
+            hoverBackgroundColor: '#F97316', // Orange on hover
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: {
+              font: { family: 'Poppins', size: 9, weight: 'bold' },
+              color: '#94a3b8',
+              maxRotation: 0,
+            },
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' },
+            border: { display: false },
+            ticks: {
+              font: { family: 'Poppins', size: 9, weight: 'bold' },
+              color: '#94a3b8',
+              callback: (value) =>
+                value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value,
+            },
+          },
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1E3A8A',
+            titleFont: { family: 'Poppins', size: 10, weight: '800' },
+            bodyFont: { family: 'Poppins', size: 10 },
+            padding: 12,
+            cornerRadius: 8,
+            displayColors: false,
+          },
+        },
+      },
     });
+  }
 
-    function initializeDashboardTrafficChart() {
-        const ctx = document.getElementById('dashboardTrafficChart');
-        if (!ctx) return;
+  function loadDashboardTrafficData() {
+    fetch('/dashboard/analytics/traffic-data/?period=week')
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.chart_data && data.chart_data.length > 0) {
+          dashboardTrafficChart.data.labels = data.chart_data.map(
+            (item) => item.label,
+          );
+          dashboardTrafficChart.data.datasets[0].data = data.chart_data.map(
+            (item) => item.value,
+          );
+          dashboardTrafficChart.update();
 
-        dashboardTrafficChart = new Chart(ctx.getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Views',
-                    data: [],
-                    backgroundColor: '#1E3A8A', // dr.Jakpa Royal Blue
-                    borderRadius: 4,
-                    barThickness: 16,
-                    hoverBackgroundColor: '#F97316' // Orange on hover
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        border: { display: false },
-                        ticks: {
-                            font: { family: 'Poppins', size: 9, weight: 'bold' },
-                            color: '#94a3b8',
-                            maxRotation: 0
-                        },
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#f1f5f9' },
-                        border: { display: false },
-                        ticks: {
-                            font: { family: 'Poppins', size: 9, weight: 'bold' },
-                            color: '#94a3b8',
-                            callback: (value) => value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value,
-                        },
-                    },
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#1E3A8A',
-                        titleFont: { family: 'Poppins', size: 10, weight: '800' },
-                        bodyFont: { family: 'Poppins', size: 10 },
-                        padding: 12,
-                        cornerRadius: 8,
-                        displayColors: false,
-                    },
-                },
-            },
-        });
-    }
-
-    function loadDashboardTrafficData() {
-        fetch('/dashboard/analytics/traffic-data/?period=week')
-            .then(response => response.json())
-            .then(data => {
-                if (data.chart_data && data.chart_data.length > 0) {
-                    dashboardTrafficChart.data.labels = data.chart_data.map(item => item.label);
-                    dashboardTrafficChart.data.datasets[0].data = data.chart_data.map(item => item.value);
-                    dashboardTrafficChart.update();
-
-                    if (data.total_views !== undefined) {
-                        document.getElementById('total-views-stat').textContent = data.total_views.toLocaleString();
-                        document.getElementById('total-visitors-stat').textContent = Math.floor(data.total_views * 0.6).toLocaleString();
-                    }
-                } else {
-                    useFallbackData();
-                }
-            })
-            .catch(error => {
-                console.error('Error loading traffic data:', error);
-                useFallbackData();
-            });
-    }
-
-    function useFallbackData() {
-        const today = new Date();
-        const labels = [];
-        const data = [];
-        for (let i = 6; i >= 0; i--) {
-            const date = new Date(today);
-            date.setDate(today.getDate() - i);
-            labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-            data.push(Math.floor(Math.random() * (150 - 50 + 1)) + 50);
+          if (data.total_views !== undefined) {
+            document.getElementById('total-views-stat').textContent =
+              data.total_views.toLocaleString();
+            document.getElementById('total-visitors-stat').textContent =
+              Math.floor(data.total_views * 0.6).toLocaleString();
+          }
+        } else {
+          useFallbackData();
         }
-        dashboardTrafficChart.data.labels = labels;
-        dashboardTrafficChart.data.datasets[0].data = data;
-        dashboardTrafficChart.update();
+      })
+      .catch((error) => {
+        console.error('Error loading traffic data:', error);
+        useFallbackData();
+      });
+  }
 
-        const totalViews = data.reduce((a, b) => a + b, 0);
-        document.getElementById('total-views-stat').textContent = totalViews.toLocaleString();
-        document.getElementById('total-visitors-stat').textContent = Math.floor(totalViews * 0.6).toLocaleString();
+  function useFallbackData() {
+    const today = new Date();
+    const labels = [];
+    const data = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      labels.push(
+        date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      );
+      data.push(Math.floor(Math.random() * (150 - 50 + 1)) + 50);
     }
+    dashboardTrafficChart.data.labels = labels;
+    dashboardTrafficChart.data.datasets[0].data = data;
+    dashboardTrafficChart.update();
+
+    const totalViews = data.reduce((a, b) => a + b, 0);
+    document.getElementById('total-views-stat').textContent =
+      totalViews.toLocaleString();
+    document.getElementById('total-visitors-stat').textContent = Math.floor(
+      totalViews * 0.6,
+    ).toLocaleString();
+  }
 </script>
 {% endblock %}

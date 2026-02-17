@@ -22,21 +22,22 @@
 
   <!-- Scrollable navigation - centered and sticky -->
   <nav
-    class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-1 flex flex-col"
+    class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-0.5 flex flex-col"
   >
     {% user_is_administrator request.user as is_admin %} 
+    
     {% user_is_author request.user as is_author %} 
-    {# Dashboard - Administrator only #} 
-    {% if is_admin %}
+    
+    {# Dashboard - Both Administrator and Author #}
     <a
       href="{% url 'dashboard' %}"
-      class="nav-link flex items-center gap-3 px-4 py-3 rounded text-[11px] font-bold uppercase tracking-widest transition-all {% if request.path == '/dashboard/' %}active-nav text-accent bg-white/10{% else %}text-white/60 hover:bg-white/5 hover:text-white{% endif %}"
+      class="nav-link flex items-center gap-3 px-4 py-2.5 rounded text-[11px] font-bold uppercase tracking-widest transition-all {% if request.path == '/dashboard/' %}active-nav text-accent bg-white/10{% else %}text-white/60 hover:bg-white/5 hover:text-white{% endif %}"
     >
       <i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard
     </a>
-    {% endif %} 
-    
+
     {# Analytics - Administrator only #} 
+    
     {% if is_admin %}
     <a
       href="{% url 'analytics:traffic_stats' %}"
@@ -45,9 +46,7 @@
       <i data-lucide="bar-chart" class="w-4 h-4"></i> Analytics
     </a>
     {% endif %} 
-    
     {# Bookings - Administrator only #} 
-    
     {% if is_admin %}
     <div>
       <button
@@ -139,7 +138,6 @@
     </div>
 
     {# Comments - Administrator only #} 
-    
     {% if is_admin %}
     <a
       href="{% url 'comments' %}"
@@ -148,9 +146,7 @@
       <i data-lucide="message-square" class="w-4 h-4"></i> Comments
     </a>
     {% endif %} 
-    
     {# Testimonials - Administrator only #} 
-    
     {% if is_admin %}
     <a
       href="#"
@@ -159,9 +155,7 @@
       <i data-lucide="quote" class="w-4 h-4"></i> Testimonials
     </a>
     {% endif %} 
-    
     {# Team - Administrator only #} 
-    
     {% if is_admin %}
     <a
       href="#"
@@ -170,11 +164,8 @@
       <i data-lucide="award" class="w-4 h-4"></i> Team
     </a>
     {% endif %} 
-    
     {# Users/Profile - Different for Administrator vs Author #} 
-    
     {% if is_admin %} 
-    
     {# Administrator sees Users with dropdown for Profile #}
     <div>
       <button
@@ -203,7 +194,6 @@
       </div>
     </div>
     {% elif is_author %} 
-    
     {# Author sees only Profile #}
     <a
       href="{% url 'profile' user_id=user.id %}"

@@ -49,23 +49,60 @@
             <!-- <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Administrative Control Panel</span> -->
           </div>
           <div class="flex items-center gap-4">
-            <div class="text-right hidden sm:block">
-              <p
-                class="text-[11px] font-bold text-royal uppercase tracking-tight"
+            <!-- User Profile Dropdown -->
+            <div class="relative group">
+              <!-- Profile Picture/Avatar -->
+              <div class="cursor-pointer flex items-center gap-3">
+                {% if user.profile.profile_picture %}
+                <img
+                  src="{{ user.profile.profile_picture.url }}"
+                  alt="{{ user.get_full_name|default:user.username }}"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-slate-100 transition-all group-hover:border-accent"
+                />
+                {% else %}
+                <div
+                  class="w-10 h-10 bg-royal rounded-full flex items-center justify-center text-white font-bold text-xs border-2 border-slate-100 transition-all group-hover:border-accent"
+                >
+                  {{ user.username|first|upper }}
+                </div>
+                {% endif %}
+                <div class="text-right hidden sm:block">
+                  <p
+                    class="text-[11px] font-bold text-royal uppercase tracking-tight"
+                  >
+                    {{ user.get_full_name|default:user.username }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Dropdown Menu (shows on hover) -->
+              <div
+                class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
               >
-                {{ user.get_full_name|default:"Administrator" }}
-              </p>
-            </div>
-            <div
-              class="w-10 h-10 bg-royal rounded-full flex items-center justify-center text-white font-bold text-xs border-2 border-slate-100"
-            >
-              {{ user.username|first|upper }}
+                <div class="py-2">
+                  <a
+                    href="{% url 'profile' user_id=user.id %}"
+                    class="flex items-center gap-3 px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-600 hover:bg-slate-50 hover:text-royal transition-colors"
+                  >
+                    <i data-lucide="user" class="w-4 h-4"></i>
+                    Edit Profile
+                  </a>
+                  <hr class="my-1 border-slate-100" />
+                  <a
+                    href="{% url 'logout' %}"
+                    class="flex items-center gap-3 px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-red-500 hover:bg-red-50 transition-colors"
+                  >
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    Logout
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </header>
 
         <main class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10">
-          {% block content %}
+          {% block content %} 
           
           {% endblock %}
         </main>
@@ -90,6 +127,8 @@
         );
       }
     </script>
-    {% block scripts %}{% endblock %}
+    {% block scripts %}
+    
+    {% endblock %}
   </body>
 </html>
