@@ -16,6 +16,16 @@ from media_manager.models import MediaFile
 from main.models import Booking, SessionTime
 from datetime import timedelta
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.urls import reverse
+from .decorators import administrator_required, author_or_admin_required
+from django.contrib.auth.models import User, Group
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from blog.models import UserProfile
+from .forms import UserCreateForm, UserEditForm, UserProfileEditForm, BulkActionForm, set_user_permissions_by_role
+
+
+@login_required(login_url='login')
 def dashboard(request):
     # Post Statistics
     total_posts = Post.objects.count()
@@ -1468,3 +1478,228 @@ def session_delete(request, session_id):
         })
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+
+def is_admin(user):
+    return user.groups.filter(name='Administrator').exists()
+
+
+@administrator_required
+def user_list(request):
+    search = request.GET.get('search', '')
+    role_filter = request.GET.get('role', '')
+
+    users = User.objects.select_related('profile').annotate(
+        post_count=Count('posts', distinct=True)
+    ).order_by('-date_joined')
+    
+    users = User.objects.select_related('profile').prefetch_related('groups')
+    
+    if search:
+        users = users.filter(
+            Q(username__icontains=search) |
+            Q(first_name__icontains=search) |
+            Q(last_name__icontains=search) |
+            Q(email__icontains=search)
+        )
+    
+    if role_filter:
+        users = users.filter(groups__name=role_filter)
+    
+    # Get user counts
+    all_count = User.objects.count()
+    admin_count = User.objects.filter(groups__name='Administrator').count()
+    author_count = User.objects.filter(groups__name='Author').count()
+    
+    # Pagination
+    paginator = Paginator(users, 10)
+    page = request.GET.get('page')
+    users = paginator.get_page(page)
+
+    
+    # Handle bulk actions
+    if request.method == 'POST':
+        form = BulkActionForm(request.POST)
+        if form.is_valid():
+            action = form.cleaned_data['action']
+            selected_ids = json.loads(form.cleaned_data['selected_users'])
+            
+            if action == 'delete':
+                User.objects.filter(id__in=selected_ids).exclude(id=request.user.id).delete()
+                messages.success(request, f'Successfully deleted {len(selected_ids)} users.')
+            elif action.startswith('change_role_'):
+                role_name = action.split('_')[-1].title()
+                try:
+                    group = Group.objects.get(name=role_name)
+                    for user_id in selected_ids:
+                        user = User.objects.get(id=user_id)
+                        user.groups.clear()
+                        user.groups.add(group)
+                        set_user_permissions_by_role(user, role_name)  # NEW: Set admin flags
+                    messages.success(request, f'Successfully changed role for {len(selected_ids)} users.')
+                except Group.DoesNotExist:
+                    messages.error(request, f'Role {role_name} does not exist.')
+            
+            return redirect('users')
+    
+    bulk_form = BulkActionForm(initial={'selected_users': '[]'})
+    
+    context = {
+        'users': users,
+        'search': search,
+        'role_filter': role_filter,
+        'all_count': all_count,
+        'admin_count': admin_count,
+        'author_count': author_count,
+        'bulk_form': bulk_form,
+    }
+    return render(request, 'dashboard/users.html', context)
+
+@administrator_required
+@login_required(login_url='login')
+@user_passes_test(is_admin)
+def add_user(request):
+    if request.method == 'POST':
+        form = UserCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f'User "{user.username}" has been created successfully.')
+            return redirect('users')
+    else:
+        form = UserCreateForm()
+    
+    return render(request, 'dashboard/add_user.html', {'form': form})
+
+@administrator_required
+@login_required(login_url='login')
+@user_passes_test(is_admin)
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    
+    if request.user.id == user.id:
+        return JsonResponse({'success': False, 'message': 'You cannot delete your own account'})
+    
+    if request.method == 'POST':
+        username = user.username
+        user.delete()
+        return JsonResponse({'success': True, 'message': f'User "{username}" has been deleted successfully'})
+    
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+@login_required(login_url='login')
+def profile(request, user_id):
+    # Check if user is editing themselves or if they're admin
+    if user_id == request.user.id:
+        target_user = request.user
+        is_admin_editing = False
+
+    else:
+        # Must be admin to edit others
+        if not (request.user.is_staff or request.user.groups.filter(name='Administrator').exists()):
+            messages.error(request, 'You do not have permission to edit other users.')
+            return redirect('profile', user_id=request.user.id)
+        target_user = get_object_or_404(User, id=user_id)
+        is_admin_editing = True
+    
+    profile, _ = UserProfile.objects.get_or_create(user=target_user)
+    
+    if request.method == 'POST':
+        return handle_profile_update(request, target_user, profile, is_admin_editing)
+    
+    # GET request
+    user_form = UserEditForm(instance=target_user, show_role=is_admin_editing)
+    profile_form = UserProfileEditForm(instance=profile)
+    
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'profile': profile,
+        'target_user': target_user,
+        'is_admin_editing': is_admin_editing,
+        'can_edit_role': is_admin_editing,
+    }
+    
+    return render(request, 'dashboard/profile.html', context)
+
+
+@login_required(login_url='login')
+def current_user_profile(request):
+    """Wrapper view to redirect /users/profile/ to current user's profile"""
+    return profile(request, user_id=request.user.id)
+
+
+def handle_profile_update(request, target_user, profile, is_admin_editing):
+    user_form = UserEditForm(request.POST, instance=target_user, show_role=is_admin_editing)
+    profile_form = UserProfileEditForm(request.POST, request.FILES, instance=profile)
+    
+    if not (user_form.is_valid() and profile_form.is_valid()):
+        messages.error(request, 'Please correct the errors below.')
+        return render(request, 'dashboard/profile.html', {
+            'user_form': user_form,
+            'profile_form': profile_form,
+            'profile': profile,
+            'target_user': target_user,
+            'is_admin_editing': is_admin_editing,
+            'can_edit_role': is_admin_editing,
+        })
+    
+    try:
+        with transaction.atomic():
+            profile_form.save()
+            user = user_form.save()
+            
+            if is_admin_editing and 'role' in user_form.cleaned_data:
+                role = user_form.cleaned_data.get('role')
+                if role:
+                    user.groups.set([role])
+                    set_user_permissions_by_role(user, role.name)
+        
+        success_msg = f'{"User" if is_admin_editing else "Profile"} updated successfully.'
+        messages.success(request, success_msg, extra_tags='profile_only')
+        
+        # Fix the redirect
+        if is_admin_editing:
+            return redirect('profile', user_id=target_user.id)
+        
+    except Exception as e:
+        messages.error(request, 'Error updating profile. Please try again.')
+        return render(request, 'dashboard/profile.html', {
+            'user_form': user_form,
+            'profile_form': profile_form,
+            'profile': profile,
+            'target_user': target_user,
+            'is_admin_editing': is_admin_editing,
+            'can_edit_role': is_admin_editing,
+        })
+
+
+def login(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    storage = messages.get_messages(request)
+    for _ in storage:
+        pass
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = authenticate(request, username=username, password=password)
+        if user:
+            auth_login(request, user)
+            
+            # Handle the 'next' parameter for redirect after login
+            next_url = request.GET.get('next') or request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
+            return redirect('dashboard') 
+        else:
+            messages.error(request, 'Invalid username or password.')
+    
+    return render(request, 'dashboard/login.html')
+
+def logout(request):
+    auth_logout(request)
+    return redirect('login')
+

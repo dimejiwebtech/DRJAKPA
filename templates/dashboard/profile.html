@@ -1,0 +1,277 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+ 
+{% block content %}
+<title>{% block title %}
+    {% if is_admin_editing %}Edit User - {{ target_user.username }} - dr.Jakpa{% else %}Profile - dr.Jakpa{% endif %}
+{% endblock %}</title>
+
+<div class="max-w-full">
+    
+    {% if messages %}
+    <div class="mb-8 space-y-3">
+        {% for message in messages %}
+            {% if 'profile_only' in message.tags %}
+                <div class="bg-orange-50 border border-orange-100 text-orange-700 px-5 py-3.5 rounded-xl flex items-center gap-3 shadow-sm" role="alert">
+                    <i data-lucide="bell" class="w-4 h-4 shrink-0"></i>
+                    <span class="text-[11px] font-bold uppercase tracking-tight">{{ message }}</span>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+        <div class="flex items-center gap-4">
+            {% if is_admin_editing %}
+                <a href="{% url 'users' %}" class="w-10 h-10 bg-white border border-slate-200 text-slate-400 rounded-xl flex items-center justify-center hover:text-royal transition-all shadow-sm">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </a>
+            {% endif %}
+            <div>
+                <h1 class="text-2xl font-black text-royal uppercase tracking-tighter leading-none">
+                    {% if is_admin_editing %}Edit User{% else %}My Profile{% endif %}
+                </h1>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-2">
+                    {% if is_admin_editing %}Update user records and account settings{% else %}Manage your personal information and preferences{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        <div class="xl:col-span-4">
+            <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8 text-center sticky top-24">
+                <div class="relative inline-block group">
+                    <div class="w-32 h-32 rounded-[2.5rem] bg-slate-50 border-4 border-white shadow-xl overflow-hidden mx-auto">
+                        {% if target_user.profile.profile_image %}
+                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="{{ target_user.profile.profile_image.url }}" alt="{{ target_user.username }}">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                <i data-lucide="user" class="w-12 h-12"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <h3 class="mt-6 text-lg font-black text-royal uppercase tracking-tight">
+                    {% if target_user.first_name or target_user.last_name %}
+                        {{ target_user.first_name }} {{ target_user.last_name }}
+                    {% else %}
+                        {{ target_user.username }}
+                    {% endif %}
+                </h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">@{{ target_user.username }}</p>
+
+                {% if target_user.groups.first %}
+                    <div class="mt-4">
+                        <span class="px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-lg border
+                              {% if target_user.groups.first.name == 'Administrator' %}bg-red-50 text-red-600 border-red-100{% else %}bg-royal/5 text-royal border-royal/10{% endif %}">
+                            {{ target_user.groups.first.name }}
+                        </span>
+                    </div>
+                {% endif %}
+
+                {% if profile.bio %}
+                <div class="mt-8 pt-8 border-t border-slate-50">
+                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed italic">"{{ profile.bio }}"</p>
+                </div>
+                {% endif %}
+                
+                {% if profile.website or profile.facebook or profile.twitter or profile.linkedin or profile.instagram %}
+                <div class="mt-8 pt-8 border-t border-slate-50">
+                    <h4 class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4 text-center">Social Connectivity</h4>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        {% if profile.website %}
+                            <a href="{{ profile.website }}" target="_blank" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:text-royal transition-all">
+                                <i data-lucide="globe" class="w-4 h-4"></i>
+                            </a>
+                        {% endif %}
+                        {% if profile.facebook %}
+                            <a href="{{ profile.facebook }}" target="_blank" class="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all">
+                                <i data-lucide="facebook" class="w-4 h-4"></i>
+                            </a>
+                        {% endif %}
+                        {% if profile.twitter %}
+                            <a href="{{ profile.twitter }}" target="_blank" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-white flex items-center justify-center hover:bg-black transition-all">
+                                <i data-lucide="twitter" class="w-4 h-4"></i>
+                            </a>
+                        {% endif %}
+                        {% if profile.linkedin %}
+                            <a href="{{ profile.linkedin }}" target="_blank" class="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 flex items-center justify-center hover:bg-indigo-700 hover:text-white transition-all">
+                                <i data-lucide="linkedin" class="w-4 h-4"></i>
+                            </a>
+                        {% endif %}
+                        {% if profile.instagram %}
+                            <a href="{{ profile.instagram }}" target="_blank" class="w-8 h-8 rounded-lg bg-pink-50 border border-pink-100 text-pink-600 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all">
+                                <i data-lucide="instagram" class="w-4 h-4"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="mt-8 pt-8 border-t border-slate-50 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Email</span>
+                        <span class="text-[10px] font-bold text-royal">{{ target_user.email }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Joined</span>
+                        <span class="text-[10px] font-bold text-royal">{{ target_user.date_joined|date:"M j, Y" }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Last Access</span>
+                        <span class="text-[10px] font-bold text-royal">{% if target_user.last_login %}{{ target_user.last_login|date:"M j, Y" }}{% else %}N/A{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="xl:col-span-8">
+            <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden">
+                <div class="bg-slate-50/50 border-b border-slate-100">
+                    <nav class="flex px-8" aria-label="Tabs">
+                        <button onclick="showTab('basic')" id="basic-tab" class="py-5 px-6 border-b-2 font-black text-[10px] uppercase tracking-[0.2em] transition-all tab-button active border-royal text-royal">
+                            Basic Information
+                        </button>
+                        <button onclick="showTab('social')" id="social-tab" class="py-5 px-6 border-b-2 font-black text-[10px] uppercase tracking-[0.2em] transition-all tab-button border-transparent text-slate-400 hover:text-royal">
+                            Social Links
+                        </button>
+                    </nav>
+                </div>
+
+                <form method="post" action="{% url 'profile' user_id=target_user.id %}" enctype="multipart/form-data" class="p-8 md:p-10">
+                    {% csrf_token %}
+                    
+                    <div id="basic-content" class="tab-content space-y-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Username</label>
+                                {{ user_form.username }}
+                                {% if user_form.username.errors %}<p class="text-[9px] font-bold text-red-500 uppercase mt-1 ml-1">{{ user_form.username.errors.0 }}</p>{% endif %}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}<p class="text-[9px] font-bold text-red-500 uppercase mt-1 ml-1">{{ user_form.email.errors.0 }}</p>{% endif %}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">First Name</label>
+                                {{ user_form.first_name }}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Last Name</label>
+                                {{ user_form.last_name }}
+                            </div>
+
+                            {% if can_edit_role and user_form.role %}
+                                <div class="lg:col-span-2 space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Assigned Role</label>
+                                    {{ user_form.role }}
+                                </div>
+                            {% endif %}
+
+                            <div class="lg:col-span-2 space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Website URL</label>
+                                {{ profile_form.website }}
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Short Biography</label>
+                            {{ profile_form.bio }}
+                            <p class="text-[9px] font-bold text-slate-300 uppercase tracking-tight ml-1">Brief summary of professional clinical experience.</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Profile Asset</label>
+                            <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <div class="shrink-0">
+                                    {% if target_user.profile.profile_image %}
+                                        <img class="h-14 w-14 rounded-xl object-cover border-2 border-white shadow-sm" src="{{ target_user.profile.profile_image.url }}" alt="Asset">
+                                    {% else %}
+                                        <div class="h-14 w-14 rounded-xl bg-white flex items-center justify-center text-slate-300 border border-slate-100 shadow-sm">
+                                            <i data-lucide="camera" class="w-6 h-6"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    {{ profile_form.profile_image }}
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase mt-2">Accepted formats: JPG, PNG • Max size: 5MB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="social-content" class="tab-content space-y-8 hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Facebook Profile</label>
+                                {{ profile_form.facebook }}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Twitter Account</label>
+                                {{ profile_form.twitter }}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">LinkedIn URL</label>
+                                {{ profile_form.linkedin }}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Instagram Handle</label>
+                                {{ profile_form.instagram }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 pt-10 mt-10 border-t border-slate-50">
+                        <button type="submit" class="inline-flex items-center justify-center px-8 py-4 bg-accent text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-orange-600 shadow-xl shadow-orange-100 transition-all active:scale-[0.98]">
+                            <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+                            {% if is_admin_editing %}Update User Record{% else %}Commit Changes{% endif %}
+                        </button>
+                        
+                        {% if is_admin_editing %}
+                            <a href="{% url 'users' %}" class="inline-flex items-center justify-center px-8 py-4 bg-white border border-slate-200 text-slate-400 text-[11px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-slate-50 transition-all">
+                                Cancel Operation
+                            </a>
+                        {% else %}
+                            <button type="reset" class="inline-flex items-center justify-center px-8 py-4 bg-white border border-slate-200 text-slate-400 text-[11px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-slate-50 transition-all">
+                                Reset Fields
+                            </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showTab(tabId) {
+        // Toggle Content
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+        document.getElementById(tabId + '-content').classList.remove('hidden');
+        
+        // Toggle Button Styles
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('border-royal', 'text-royal');
+            btn.classList.add('border-transparent', 'text-slate-400');
+        });
+        
+        const activeBtn = document.getElementById(tabId + '-tab');
+        activeBtn.classList.add('border-royal', 'text-royal');
+        activeBtn.classList.remove('border-transparent', 'text-slate-400');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}

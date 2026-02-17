@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
 
     # Posts
     path('posts/', views.posts, name='posts'),
@@ -57,4 +59,13 @@ urlpatterns = [
     path('sessions/<int:session_id>/', views.session_detail, name='session_detail'),
     path('sessions/<int:session_id>/update/', views.session_update, name='session_update'),
     path('sessions/<int:session_id>/delete/', views.session_delete, name='session_delete'),
+
+    # Users
+    path('users/', views.user_list, name='users'),
+    path('users/add-user/', views.add_user, name='add_user'),
+    path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),
+    path('users/profile/', views.profile, name='profile'),
+    path('users/<int:user_id>/profile/', views.profile, name='profile'),
+    
+    # Users
 ]

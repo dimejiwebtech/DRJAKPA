@@ -1,0 +1,202 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Users Management | dr.Jakpa Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-full">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+        <div>
+            <h1 class="text-2xl font-black text-royal uppercase tracking-tighter">User Directory</h1>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage site contributors and account privileges.</p>
+        </div>
+        <a href="{% url 'add_user' %}" class="px-6 py-3 bg-accent text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 shadow-lg shadow-orange-100 transition-all flex items-center justify-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Add User
+        </a>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl mb-8 overflow-hidden shadow-sm">
+        <div class="flex flex-wrap gap-2 p-2 bg-slate-50/50">
+            <a href="{% url 'users' %}" class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if not role_filter %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}">
+                All Entries <span class="ml-1 opacity-60">({{ all_count }})</span>
+            </a>
+            <a href="{% url 'users' %}?role=Administrator" class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if role_filter == 'Administrator' %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}">
+                Administrator <span class="ml-1 opacity-60">({{ admin_count }})</span>
+            </a>
+            <a href="{% url 'users' %}?role=Author" class="px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all {% if role_filter == 'Author' %}bg-royal text-white{% else %}text-slate-400 hover:text-royal hover:bg-white{% endif %}">
+                Author <span class="ml-1 opacity-60">({{ author_count }})</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-8 shadow-sm">
+        <div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+            <form method="get" class="w-full lg:max-w-md">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ search }}" 
+                           placeholder="Search users..." 
+                           class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-royal outline-none focus:border-royal focus:bg-white transition-all placeholder-slate-300 shadow-inner">
+                    <i data-lucide="search" class="absolute left-4 top-3 w-4 h-4 text-slate-300"></i>
+                    {% if role_filter %}
+                        <input type="hidden" name="role" value="{{ role_filter }}">
+                    {% endif %}
+                </div>
+            </form>
+            
+            <form method="post" id="bulk-action-form" class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                {% csrf_token %}
+                <div class="hidden">{{ bulk_form.selected_users }}</div>
+                <div class="flex-1 lg:flex-none min-w-[200px]">
+                    {{ bulk_form.action }}
+                </div>
+                <button type="submit" class="px-6 py-3 bg-royal text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-royal/90 disabled:bg-slate-100 disabled:text-slate-300 transition-all shadow-xl shadow-royal/10" disabled id="apply-btn">
+                    Apply
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm mb-10 overflow-hidden">
+        <div class="w-full">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-200 hidden md:table-header-group">
+                    <tr>
+                        <th class="w-12 px-6 py-4">
+                            <input type="checkbox" id="select-all" class="rounded border-slate-300 text-royal focus:ring-royal" />
+                        </th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Username</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Full Name</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Email Address</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Privilege</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Posts</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for user in users %}
+                    <tr class="user-row flex flex-col md:table-row transition-colors group" data-user-id="{{ user.id }}">
+                        <td class="px-6 py-4 md:py-5 align-top md:w-12 border-b md:border-0 border-slate-50 bg-slate-50/30 md:bg-transparent">
+                            <input type="checkbox" name="user_checkbox" value="{{ user.id }}" class="user-checkbox rounded border-slate-300 text-royal focus:ring-royal" />
+                        </td>
+
+                        <td class="px-6 py-4 md:py-5 align-top">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-royal/10 flex items-center justify-center shrink-0 border border-royal/5">
+                                    {% if user.profile.profile_image %}
+                                        <img class="w-full h-full rounded-full object-cover" src="{{ user.profile.profile_image.url }}" alt="{{ user.username }}">
+                                    {% else %}
+                                        <span class="text-royal font-black text-[10px]">{{ user.username|slice:":2"|upper }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="text-[11px] font-black text-royal uppercase tracking-tight truncate">{{ user.username }}</div>
+                                    
+                                    <div class="flex items-center gap-2 mt-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity text-[9px] font-black uppercase tracking-widest">
+                                        <a href="{% url 'profile' user_id=user.id %}" class="text-royal hover:text-accent">Edit</a>
+                                        <span class="text-slate-200">|</span>
+                                        {% if user.id != request.user.id %}
+                                            <span class="text-slate-200">|</span>
+                                            <button onclick="deleteUser({{ user.id }}, '{{ user.username }}')" class="text-red-500 hover:underline">Delete</button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-2 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-400 md:hidden uppercase tracking-widest text-[9px] block mb-1">Name:</span>
+                            <div class="text-[11px] font-bold text-slate-700">
+                                {% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}<span class="text-slate-300">—</span>{% endif %}
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-2 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-400 md:hidden uppercase tracking-widest text-[9px] block mb-1">Email:</span>
+                            <div class="text-[11px] font-medium text-slate-900 truncate">{{ user.email }}</div>
+                        </td>
+
+                        <td class="px-6 py-2 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-400 md:hidden uppercase tracking-widest text-[9px] block mb-1">Role:</span>
+                            {% if user.groups.first %}
+                                <span class="inline-block px-2.5 py-1 text-[9px] font-black uppercase tracking-widest rounded-lg border
+                                      {% if user.groups.first.name == 'Administrator' %}bg-red-50 text-red-600 border-red-100{% else %}bg-green-50 text-green-700 border-green-100{% endif %}">
+                                    {{ user.groups.first.name }}
+                                </span>
+                            {% else %}
+                                <span class="text-[9px] font-bold text-slate-300 uppercase italic">Unassigned</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="px-6 py-4 md:py-5 align-top">
+                            <span class="text-[11px] font-bold text-slate-400 md:hidden uppercase tracking-widest text-[9px] block mb-1">Posts:</span>
+                            <span class="inline-flex items-center justify-center min-w-8 h-8 px-2 bg-slate-50 text-royal text-[11px] font-black rounded-lg border border-slate-100">{{ user.post_count|default:0 }}</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-24 text-center">
+                            <i data-lucide="users" class="w-16 h-16 text-slate-100 mx-auto mb-4"></i>
+                            <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                {% if search %}No user records found matching "{{ search }}"{% else %}No registered users identified in the system{% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if users.has_other_pages %}
+    <div class="mt-10 pb-10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            Displaying <span class="text-royal">{{ users.start_index }} - {{ users.end_index }}</span> of {{ users.paginator.count }}
+        </p>
+        
+        <nav class="flex items-center gap-2">
+            {% if users.has_previous %}
+                <a href="?page=1{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" class="w-10 h-10 bg-white border border-slate-200 text-royal rounded-lg flex items-center justify-center hover:bg-royal hover:text-white transition-all shadow-sm">
+                    <i data-lucide="chevrons-left" class="w-4 h-4"></i>
+                </a>
+                <a href="?page={{ users.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" class="w-10 h-10 bg-white border border-slate-200 text-royal rounded-lg flex items-center justify-center hover:bg-royal hover:text-white transition-all shadow-sm">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </a>
+            {% endif %}
+            
+            <div class="px-6 py-2.5 bg-white border border-slate-200 text-[10px] font-black text-royal rounded-lg uppercase tracking-widest shadow-sm">
+                Page {{ users.number }}
+            </div>
+            
+            {% if users.has_next %}
+                <a href="?page={{ users.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" class="w-10 h-10 bg-white border border-slate-200 text-royal rounded-lg flex items-center justify-center hover:bg-royal hover:text-white transition-all shadow-sm">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </a>
+                <a href="?page={{ users.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}" class="w-10 h-10 bg-white border border-slate-200 text-royal rounded-lg flex items-center justify-center hover:bg-royal hover:text-white transition-all shadow-sm">
+                    <i data-lucide="chevrons-right" class="w-4 h-4"></i>
+                </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<div id="edit-modal" class="fixed inset-0 bg-royal/40 backdrop-blur-sm hidden z-[200] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-100">
+        <div class="flex justify-between items-center px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="text-xs font-black text-royal uppercase tracking-[0.2em]">Edit User Record</h3>
+            <button onclick="closeModal()" class="text-slate-400 hover:text-royal transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div id="modal-content" class="p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            </div>
+    </div>
+</div>
+
+<script src="{% static 'js/dashboard/users.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login | dr.Jakpa{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center bg-neutralBg px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white border border-slate-100 rounded-2xl shadow-xl shadow-royal/5 mb-6">
+                <i data-lucide="stethoscope" class="w-8 h-8 text-royal"></i>
+            </div>
+            <h2 class="text-2xl font-black text-royal uppercase tracking-tighter">Sign in to Dashboard</h2>
+        </div>
+        
+        {% if messages %}
+            <div class="space-y-3 mb-6">
+                {% for message in messages %}
+                    <div class="bg-orange-50 border border-orange-100 text-orange-700 px-4 py-3 rounded-xl flex items-center gap-3" role="alert">
+                        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+                        <span class="text-[11px] font-bold uppercase tracking-tight">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 shadow-sm">
+            <form class="space-y-6" method="post">
+                {% csrf_token %}
+                <div class="space-y-5">
+                    <div>
+                        <label for="username" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Username</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-300">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </span>
+                            <input 
+                                id="username" 
+                                name="username" 
+                                type="text" 
+                                required 
+                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-royal outline-none focus:border-royal focus:bg-white transition-all placeholder-slate-300 shadow-inner"
+                                placeholder="Enter your username"
+                            >
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-300">
+                                <i data-lucide="lock" class="w-4 h-4"></i>
+                            </span>
+                            <input 
+                                id="password" 
+                                name="password" 
+                                type="password" 
+                                required 
+                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-royal outline-none focus:border-royal focus:bg-white transition-all placeholder-slate-300 shadow-inner"
+                                placeholder="••••••••"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <button 
+                        type="submit" 
+                        class="w-full py-4 px-6 bg-royal text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-royal/90 shadow-xl shadow-royal/10 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                    >
+                        Login
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+</script>
+{% endblock %}
