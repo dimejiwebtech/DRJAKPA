@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST, require_GET, require_http
 import json
 import os
 from media_manager.models import MediaFile
-from main.models import Booking, SessionTime
+from main.models import Booking, SessionTime, Testimonial
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -1478,6 +1478,77 @@ def session_delete(request, session_id):
         })
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@administrator_required
+@login_required(login_url='login')
+def testimonials(request):
+    testimonials = Testimonial.objects.all().order_by('-created_at')
+    paginator = Paginator(testimonials, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'dashboard/testimonials.html', {
+        'page_obj': page_obj,
+        'testimonials': page_obj.object_list,
+    })
+
+@administrator_required
+@login_required(login_url='login')
+@require_http_methods(["POST"])
+def add_testimonial(request):
+    try:
+        testimonial = Testimonial.objects.create(
+            name=request.POST.get('name', '').strip(),
+            location=request.POST.get('location', '').strip(),
+            image=request.FILES.get('image'),
+            testimony=request.POST.get('testimony', '').strip(),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@administrator_required    
+@login_required(login_url='login')
+def edit_testimonial(request, pk):
+    testimonial = get_object_or_404(Testimonial, pk=pk)
+    
+    if request.method == 'GET':
+        return JsonResponse({
+            'id': testimonial.id,
+            'name': testimonial.name,
+            'location': testimonial.location,
+            'image': testimonial.image.url if testimonial.image else '',
+            'testimony': testimonial.testimony,
+            'is_active': testimonial.is_active,
+        })
+    
+    elif request.method == 'POST':
+        try:
+            testimonial.name = request.POST.get('name', '').strip()
+            testimonial.location = request.POST.get('location', '').strip()
+            
+            if request.FILES.get('image'):
+                testimonial.image = request.FILES['image']
+            
+            testimonial.testimony = request.POST.get('testimony', '').strip()
+            testimonial.is_active = request.POST.get('is_active') == 'on'
+            testimonial.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+@login_required(login_url='login')
+@administrator_required
+@require_http_methods(["DELETE"])
+def delete_testimonial(request, pk):
+    try:
+        testimonial = get_object_or_404(Testimonial, pk=pk)
+        testimonial.delete()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 
 
