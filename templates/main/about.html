@@ -43,6 +43,8 @@
   </div>
 </header>
 
+{% include 'partials/legal_disclaimer_banner.html' %}
+
 <!-- Schema.org Structured Data -->
 <script type="application/ld+json">
   {
@@ -293,135 +295,74 @@
     </div>
 
     <div id="team-container" class="team-scroll-wrapper gap-6">
+      {% for member in team_members %}
       <div
         class="reveal team-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 group"
-        style="transition-delay: 100ms"
+        style="transition-delay: {{ forloop.counter }}00ms"
       >
         <div class="h-72 bg-slate-200 overflow-hidden relative">
+          {% if member.image %}
           <img
-            src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=600&auto=format&fit=crop"
+            src="{{ member.image.url }}"
             class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+            alt="{{ member.name }}"
           />
+          {% else %}
+          <div
+            class="w-full h-full flex items-center justify-center bg-slate-100"
+          >
+            <span class="text-5xl font-black text-slate-300"
+              >{{ member.name|slice:":1"|upper }}</span
+            >
+          </div>
+          {% endif %}
           <div
             class="team-social absolute bottom-4 left-0 right-0 flex justify-center gap-3 opacity-0 translate-y-4 transition-all duration-300"
           >
+            {% if member.linkedin_url %}
             <a
-              href="#"
+              href="{{ member.linkedin_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
               class="w-8 h-8 bg-royal text-white rounded-full flex items-center justify-center hover:bg-accent transition-colors"
               ><i data-lucide="linkedin" class="w-4 h-4"></i
             ></a>
+            {% endif %} {% if member.twitter_url %}
             <a
-              href="#"
+              href="{{ member.twitter_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
               class="w-8 h-8 bg-royal text-white rounded-full flex items-center justify-center hover:bg-accent transition-colors"
               ><i data-lucide="twitter" class="w-4 h-4"></i
             ></a>
+            {% endif %}
           </div>
         </div>
         <div class="p-6 text-center">
           <h4 class="font-bold text-royal text-sm uppercase tracking-widest">
-            Dr. Jakpa
+            {{ member.name }}
           </h4>
           <p
             class="text-[10px] text-accent font-bold uppercase tracking-widest mt-1"
           >
-            Founder & Chief Consultant
+            {{ member.role }}
           </p>
-        </div>
-      </div>
-
-      <div
-        class="reveal team-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 group"
-        style="transition-delay: 200ms"
-      >
-        <div class="h-72 bg-slate-200 overflow-hidden relative">
-          <img
-            src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=600&auto=format&fit=crop"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-          />
-          <div
-            class="team-social absolute bottom-4 left-0 right-0 flex justify-center gap-3 opacity-0 translate-y-4 transition-all duration-300"
-          >
-            <a
-              href="#"
-              class="w-8 h-8 bg-royal text-white rounded-full flex items-center justify-center hover:bg-accent transition-colors"
-              ><i data-lucide="linkedin" class="w-4 h-4"></i
-            ></a>
-          </div>
-        </div>
-        <div class="p-6 text-center">
-          <h4 class="font-bold text-royal text-sm uppercase tracking-widest">
-            Sarah M.
-          </h4>
+          {% if member.bio %}
           <p
-            class="text-[10px] text-accent font-bold uppercase tracking-widest mt-1"
+            class="text-[11px] text-slate-400 mt-3 leading-relaxed line-clamp-2"
           >
-            Licensing & Anabin Audit
+            {{ member.bio }}
           </p>
+          {% endif %}
         </div>
       </div>
-
-      <div
-        class="reveal team-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 group"
-        style="transition-delay: 300ms"
-      >
-        <div class="h-72 bg-slate-200 overflow-hidden relative">
-          <img
-            src="https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=600&auto=format&fit=crop"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-          />
-          <div
-            class="team-social absolute bottom-4 left-0 right-0 flex justify-center gap-3 opacity-0 translate-y-4 transition-all duration-300"
-          >
-            <a
-              href="#"
-              class="w-8 h-8 bg-royal text-white rounded-full flex items-center justify-center hover:bg-accent transition-colors"
-              ><i data-lucide="linkedin" class="w-4 h-4"></i
-            ></a>
-          </div>
-        </div>
-        <div class="p-6 text-center">
-          <h4 class="font-bold text-royal text-sm uppercase tracking-widest">
-            Klaus Webber
-          </h4>
-          <p
-            class="text-[10px] text-accent font-bold uppercase tracking-widest mt-1"
-          >
-            Medical German Coordinator
-          </p>
-        </div>
-      </div>
-
-      <div
-        class="reveal team-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 group"
-        style="transition-delay: 400ms"
-      >
-        <div class="h-72 bg-slate-200 overflow-hidden relative">
-          <img
-            src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=600&auto=format&fit=crop"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-          />
-          <div
-            class="team-social absolute bottom-4 left-0 right-0 flex justify-center gap-3 opacity-0 translate-y-4 transition-all duration-300"
-          >
-            <a
-              href="#"
-              class="w-8 h-8 bg-royal text-white rounded-full flex items-center justify-center hover:bg-accent transition-colors"
-              ><i data-lucide="linkedin" class="w-4 h-4"></i
-            ></a>
-          </div>
-        </div>
-        <div class="p-6 text-center">
-          <h4 class="font-bold text-royal text-sm uppercase tracking-widest">
-            Dr. Emeka N.
-          </h4>
-          <p
-            class="text-[10px] text-accent font-bold uppercase tracking-widest mt-1"
-          >
-            Hospital Relations Lead
-          </p>
-        </div>
-      </div>
+      {% empty %}
+      <p class="text-slate-400 text-sm col-span-full text-center py-12">
+        Team information coming soon.
+      </p>
+      {% endfor %}
     </div>
+    
   </div>
 </section>
 

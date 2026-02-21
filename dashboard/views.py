@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST, require_GET, require_http
 import json
 import os
 from media_manager.models import MediaFile
-from main.models import Booking, SessionTime, Testimonial
+from main.models import Booking, SessionTime, Testimonial, TeamMember
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -1550,6 +1550,87 @@ def delete_testimonial(request, pk):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 
+
+# ─── Team Management ─────────────────────────────────────────────────
+
+@administrator_required
+@login_required(login_url='login')
+def team_list(request):
+    members = TeamMember.objects.all()
+    paginator = Paginator(members, 20)
+    page_obj = paginator.get_page(request.GET.get('page'))
+    return render(request, 'dashboard/team.html', {
+        'page_obj': page_obj,
+        'members': page_obj.object_list,
+    })
+
+
+@administrator_required
+@login_required(login_url='login')
+@require_http_methods(["POST"])
+def add_team_member(request):
+    try:
+        member = TeamMember.objects.create(
+            name=request.POST.get('name', '').strip(),
+            role=request.POST.get('role', '').strip(),
+            bio=request.POST.get('bio', '').strip(),
+            linkedin_url=request.POST.get('linkedin_url', '').strip(),
+            twitter_url=request.POST.get('twitter_url', '').strip(),
+            order=int(request.POST.get('order', 0) or 0),
+            is_active=request.POST.get('is_active') == 'on',
+        )
+        if request.FILES.get('image'):
+            member.image = request.FILES['image']
+            member.save()
+        return JsonResponse({'success': True, 'id': member.id})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+@administrator_required
+@login_required(login_url='login')
+def edit_team_member(request, pk):
+    member = get_object_or_404(TeamMember, pk=pk)
+
+    if request.method == 'GET':
+        return JsonResponse({
+            'id': member.id,
+            'name': member.name,
+            'role': member.role,
+            'bio': member.bio,
+            'linkedin_url': member.linkedin_url,
+            'twitter_url': member.twitter_url,
+            'order': member.order,
+            'is_active': member.is_active,
+            'image': member.image.url if member.image else '',
+        })
+
+    elif request.method == 'POST':
+        try:
+            member.name = request.POST.get('name', '').strip()
+            member.role = request.POST.get('role', '').strip()
+            member.bio = request.POST.get('bio', '').strip()
+            member.linkedin_url = request.POST.get('linkedin_url', '').strip()
+            member.twitter_url = request.POST.get('twitter_url', '').strip()
+            member.order = int(request.POST.get('order', 0) or 0)
+            member.is_active = request.POST.get('is_active') == 'on'
+            if request.FILES.get('image'):
+                member.image = request.FILES['image']
+            member.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+
+@administrator_required
+@login_required(login_url='login')
+@require_http_methods(["DELETE"])
+def delete_team_member(request, pk):
+    try:
+        get_object_or_404(TeamMember, pk=pk).delete()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 
 def is_admin(user):

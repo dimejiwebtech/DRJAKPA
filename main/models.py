@@ -126,3 +126,21 @@ class Faq(models.Model):
     
     def __str__(self):
         return self.question
+
+
+class TeamMember(models.Model):
+    name = models.CharField(max_length=150)
+    role = models.CharField(max_length=150)
+    bio = models.TextField(blank=True)
+    image = models.ImageField(upload_to='team/', blank=True, null=True)
+    linkedin_url = models.URLField(blank=True)
+    twitter_url = models.URLField(blank=True)
+    order = models.PositiveIntegerField(default=0, help_text="Display order (lower = earlier)")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'created_at']
+
+    def __str__(self):
+        return f"{self.name} — {self.role}"

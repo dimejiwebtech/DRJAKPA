@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 from .emails import send_contact_email, send_booking_confirmation_async
-from .models import EligibilityAssessment, SessionTime, Booking, Testimonial, Faq
+from .models import EligibilityAssessment, SessionTime, Booking, Testimonial, Faq, TeamMember
 from blog.models import Post
 def home(request):
     faqs = Faq.objects.all().order_by('-created_at')
@@ -14,7 +14,8 @@ def home(request):
     return render(request, 'main/homepage.html', {'posts': posts, 'testimonials': testimonials, 'faqs': faqs})
 
 def about(request):
-    return render(request, 'main/about.html')
+    team_members = TeamMember.objects.filter(is_active=True).order_by('order', 'created_at')
+    return render(request, 'main/about.html', {'team_members': team_members})
 
 def contact(request):
     if request.method == 'POST':

@@ -1,14 +1,828 @@
 {% extends 'base.html' %} 
 
-{% block title %}Our Services - Dr. Jakpa{% endblock %} 
+{% load static %} 
 
-{% block description %}Comprehensive medical migration services for Nigerian doctors: Approbation support, FSP exam preparation, German language training, hospital placement, and relocation assistance.{% endblock %} 
+{% block title %}Our Services - dr. Jakpa{% endblock %} 
 
-{% block keywords %}medical migration services, Approbation support, FSP exam preparation, German language courses, hospital placement German {%endblock %} 
+{% block description %}Comprehensive medical migration services for Nigerian doctors: Approbation support, FSP exam preparation, German
+language training, hospital placement, and relocation assistance.{% endblock %}
 
-{% block canonical %}https://drjakpa.com/services/{% endblock %} {% block og_title %}Dr. Jakpa Services - Complete Medical Migration Support{% endblock %} 
+{% block keywords %}medical migration services, Approbation support, FSP exam preparation, German language courses, hospital placement Germany{% endblock %}
 
-{% block og_description %}From licensing to language training to hospital placement - comprehensive support for Nigerian doctors migrating to Germany.{% endblock %}
-{% block content %} 
+{% block canonical %}https://drjakpa.com/services/{% endblock %} 
+
+{% block og_title %}Dr. Jakpa Services - Complete Medical Migration Support{% endblock %}
+
+{% block og_description %}From licensing to language training to hospital placement - comprehensive support for Nigerian doctors migrating to Germany.{% endblock %} 
+
+{% block content %}
+
+<!-- ─── Hero ──────────────────────────────────────────────── -->
+<header class="relative h-[60vh] min-h-[520px] flex items-center pt-20">
+  <div class="absolute inset-0">
+    <img
+      src="{% static 'images/about-hero.webp' %}"
+      alt="Medical Services"
+      class="w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-royal/88"></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10 w-full">
+    <div class="max-w-3xl reveal">
+      <span
+        class="text-accent font-bold tracking-[0.4em] text-[10px] mb-4 block uppercase"
+        >Clinical Migration Services</span
+      >
+      <h1
+        class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6 uppercase tracking-tighter"
+      >
+        Every Step.<br /><span class="text-accent">Covered.</span>
+      </h1>
+      <p
+        class="text-sm md:text-base text-slate-200 mb-10 leading-relaxed font-light opacity-90 max-w-xl"
+      >
+        We have structured the entire Nigerian-to-Germany medical migration
+        process into five distinct service pillars — so you never have to figure
+        it out alone.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a
+          href="{% url 'home' %}#eligibility"
+          class="bg-accent hover:bg-orange-600 text-white font-black py-4 px-9 rounded text-[11px] transition-all uppercase tracking-widest shadow-xl shadow-accent/20"
+        >
+          Check Eligibility
+        </a>
+        <a
+          href="{% url 'bookings' %}"
+          class="bg-white/10 border border-white/20 hover:bg-white/20 text-white font-bold py-4 px-9 rounded text-sm backdrop-blur-sm transition-all"
+        >
+          Book a Session
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+{% include 'partials/legal_disclaimer_banner.html' %}
+
+<!-- ─── Schema.org ─────────────────────────────────────────── -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Dr. Jakpa Medical Migration Services",
+    "provider": {
+      "@type": "Organization",
+      "name": "Dr. Jakpa",
+      "url": "https://drjakpa.com"
+    },
+    "description": "Comprehensive medical migration services for Nigerian doctors: Approbation support, FSP exam preparation, German language training, hospital placement, and relocation assistance.",
+    "areaServed": "Germany"
+  }
+</script>
+
+<!-- ─── Intro Strip ────────────────────────────────────────── -->
+<section class="py-16 bg-white border-b border-slate-100">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="reveal text-center">
+        <p class="text-3xl font-black text-royal mb-1">5</p>
+        <p
+          class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"
+        >
+          Core Service Pillars
+        </p>
+      </div>
+      <div class="reveal text-center">
+        <p class="text-3xl font-black text-royal mb-1">100%</p>
+        <p
+          class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"
+        >
+          Legal Pathway Only
+        </p>
+      </div>
+      <div class="reveal text-center">
+        <p class="text-3xl font-black text-royal mb-1">1-on-1</p>
+        <p
+          class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"
+        >
+          Personalised Sessions
+        </p>
+      </div>
+      <div class="reveal text-center">
+        <p class="text-3xl font-black text-royal mb-1">End-to-End</p>
+        <p
+          class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"
+        >
+          Migration Support
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Service Cards ─────────────────────────────────────── -->
+<section class="py-24 bg-neutral-bg">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <span
+        class="text-accent font-bold tracking-[0.4em] text-[10px] mb-3 block uppercase"
+        >What We Offer</span
+      >
+      <h2
+        class="text-3xl md:text-4xl font-bold text-royal uppercase tracking-tighter"
+      >
+        Our Service Pillars
+      </h2>
+      <p class="text-sm text-slate-500 mt-4 max-w-xl mx-auto leading-relaxed">
+        Each pillar is a focused programme designed to handle a critical stage
+        of your migration journey — from first assessment to landing in Germany.
+      </p>
+    </div>
+
+    <div class="space-y-8">
+      <!-- 01 -->
+      <div
+        class="reveal bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-accent/30 transition-all duration-300 group"
+      >
+        <div class="grid lg:grid-cols-3">
+          <div class="bg-royal p-10 flex flex-col justify-between">
+            <span class="text-5xl font-black text-white/10 leading-none"
+              >01</span
+            >
+            <div>
+              <div
+                class="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mb-4"
+              >
+                <i data-lucide="clipboard-check" class="w-6 h-6 text-white"></i>
+              </div>
+              <h3
+                class="text-lg font-black text-white uppercase tracking-tighter"
+              >
+                Consultation &amp; Assessment
+              </h3>
+              <p class="text-[11px] text-slate-300 mt-2 leading-relaxed">
+                Your first structured step. We map your exact starting point.
+              </p>
+            </div>
+          </div>
+          <div class="lg:col-span-2 p-10">
+            <div class="grid sm:grid-cols-2 gap-8">
+              <div>
+                <h4
+                  class="text-[10px] font-black text-accent uppercase tracking-widest mb-4"
+                >
+                  What's Included
+                </h4>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Free online eligibility quiz</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >1-on-1 strategy session (paid)</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Approbation pathway mapping</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >German state selection strategy</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Document checklist &amp; gap analysis</span
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4"
+                >
+                  Ideal For
+                </h4>
+                <p class="text-[12px] text-slate-500 leading-relaxed">
+                  Doctors at the very beginning of the process — unsure if they
+                  qualify or where to start.
+                </p>
+                <a
+                  href="{% url 'home' %}#eligibility"
+                  class="mt-6 inline-flex items-center gap-2 text-[11px] font-black text-accent uppercase tracking-widest hover:gap-3 transition-all"
+                >
+                  Start Free Quiz
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div
+        class="reveal bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-accent/30 transition-all duration-300 group"
+      >
+        <div class="grid lg:grid-cols-3">
+          <div class="bg-slate-800 p-10 flex flex-col justify-between">
+            <span class="text-5xl font-black text-white/10 leading-none"
+              >02</span
+            >
+            <div>
+              <div
+                class="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mb-4"
+              >
+                <i data-lucide="file-badge" class="w-6 h-6 text-white"></i>
+              </div>
+              <h3
+                class="text-lg font-black text-white uppercase tracking-tighter"
+              >
+                Licensing &amp; Document Support
+              </h3>
+              <p class="text-[11px] text-slate-300 mt-2 leading-relaxed">
+                Navigate the Approbation paperwork with expert guidance.
+              </p>
+            </div>
+          </div>
+          <div class="lg:col-span-2 p-10">
+            <div class="grid sm:grid-cols-2 gap-8">
+              <div>
+                <h4
+                  class="text-[10px] font-black text-accent uppercase tracking-widest mb-4"
+                >
+                  What's Included
+                </h4>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Translation coordination</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Ärztekammer filing guidance</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >ZAB degree equivalence check</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >State-specific document audits</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >MDCN &amp; SCFHS verification support</span
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4"
+                >
+                  Ideal For
+                </h4>
+                <p class="text-[12px] text-slate-500 leading-relaxed">
+                  Doctors who have confirmed eligibility and need to assemble
+                  and submit the correct documents to the right authorities.
+                </p>
+                <a
+                  href="{% url 'bookings' %}"
+                  class="mt-6 inline-flex items-center gap-2 text-[11px] font-black text-accent uppercase tracking-widest hover:gap-3 transition-all"
+                >
+                  Book Session <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div
+        class="reveal bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-accent/30 transition-all duration-300 group"
+      >
+        <div class="grid lg:grid-cols-3">
+          <div class="bg-royal p-10 flex flex-col justify-between">
+            <span class="text-5xl font-black text-white/10 leading-none"
+              >03</span
+            >
+            <div>
+              <div
+                class="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mb-4"
+              >
+                <i data-lucide="languages" class="w-6 h-6 text-white"></i>
+              </div>
+              <h3
+                class="text-lg font-black text-white uppercase tracking-tighter"
+              >
+                Language Training
+              </h3>
+              <p class="text-[11px] text-slate-300 mt-2 leading-relaxed">
+                From conversational to clinical-grade German fluency.
+              </p>
+            </div>
+          </div>
+          <div class="lg:col-span-2 p-10">
+            <div class="grid sm:grid-cols-2 gap-8">
+              <div>
+                <h4
+                  class="text-[10px] font-black text-accent uppercase tracking-widest mb-4"
+                >
+                  What's Included
+                </h4>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >B1 → C1 structured roadmap</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Approved language school referrals</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >FSP (Fachsprachenprüfung) exam prep</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Medical German vocabulary audit</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Mock clinical consultation practice</span
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4"
+                >
+                  Ideal For
+                </h4>
+                <p class="text-[12px] text-slate-500 leading-relaxed">
+                  Doctors who need to meet B2/C1 language requirements and pass
+                  the FSP oral medical exam before obtaining Approbation.
+                </p>
+                <a
+                  href="{% url 'bookings' %}"
+                  class="mt-6 inline-flex items-center gap-2 text-[11px] font-black text-accent uppercase tracking-widest hover:gap-3 transition-all"
+                >
+                  Book Session <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div
+        class="reveal bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-accent/30 transition-all duration-300 group"
+      >
+        <div class="grid lg:grid-cols-3">
+          <div class="bg-slate-800 p-10 flex flex-col justify-between">
+            <span class="text-5xl font-black text-white/10 leading-none"
+              >04</span
+            >
+            <div>
+              <div
+                class="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mb-4"
+              >
+                <i
+                  data-lucide="briefcase-medical"
+                  class="w-6 h-6 text-white"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-black text-white uppercase tracking-tighter"
+              >
+                Job &amp; Hospital Placement
+              </h3>
+              <p class="text-[11px] text-slate-300 mt-2 leading-relaxed">
+                Position yourself competitively in the German medical job
+                market.
+              </p>
+            </div>
+          </div>
+          <div class="lg:col-span-2 p-10">
+            <div class="grid sm:grid-cols-2 gap-8">
+              <div>
+                <h4
+                  class="text-[10px] font-black text-accent uppercase tracking-widest mb-4"
+                >
+                  What's Included
+                </h4>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >German CV &amp; cover letter adaptation</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Interview coaching (German context)</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Hospital &amp; clinic matching support</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Employment contract explanation</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Specialty-to-Fachrichtung mapping</span
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4"
+                >
+                  Important Note
+                </h4>
+                <p class="text-[12px] text-slate-500 leading-relaxed">
+                  We <strong>do not</strong> guarantee any job placement. We
+                  prepare and position you to compete effectively — the decision
+                  rests with the employer.
+                </p>
+                <a
+                  href="{% url 'bookings' %}"
+                  class="mt-6 inline-flex items-center gap-2 text-[11px] font-black text-accent uppercase tracking-widest hover:gap-3 transition-all"
+                >
+                  Book Session <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div
+        class="reveal bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-accent/30 transition-all duration-300 group"
+      >
+        <div class="grid lg:grid-cols-3">
+          <div class="bg-royal p-10 flex flex-col justify-between">
+            <span class="text-5xl font-black text-white/10 leading-none"
+              >05</span
+            >
+            <div>
+              <div
+                class="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mb-4"
+              >
+                <i data-lucide="map-pin" class="w-6 h-6 text-white"></i>
+              </div>
+              <h3
+                class="text-lg font-black text-white uppercase tracking-tighter"
+              >
+                Relocation Support
+              </h3>
+              <p class="text-[11px] text-slate-300 mt-2 leading-relaxed">
+                Land in Germany with a plan, not a panic.
+              </p>
+            </div>
+          </div>
+          <div class="lg:col-span-2 p-10">
+            <div class="grid sm:grid-cols-2 gap-8">
+              <div>
+                <h4
+                  class="text-[10px] font-black text-accent uppercase tracking-widest mb-4"
+                >
+                  What's Included
+                </h4>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Visa pathway orientation (not legal advice)</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Temporary housing guidance</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >German bank account &amp; Tax ID setup</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >City &amp; Bundesland selection advice</span
+                    >
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"
+                    ></span>
+                    <span class="text-[12px] text-slate-600"
+                      >Pre-departure briefing checklist</span
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4"
+                >
+                  Ideal For
+                </h4>
+                <p class="text-[12px] text-slate-500 leading-relaxed">
+                  Doctors who have secured their Approbation and job offer, and
+                  now need practical support to physically transition to life in
+                  Germany.
+                </p>
+                <a
+                  href="{% url 'bookings' %}"
+                  class="mt-6 inline-flex items-center gap-2 text-[11px] font-black text-accent uppercase tracking-widest hover:gap-3 transition-all"
+                >
+                  Book Session <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── How It Works ───────────────────────────────────────── -->
+<section class="py-24 bg-white border-t border-slate-100">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <span
+        class="text-accent font-bold tracking-[0.4em] text-[10px] mb-3 block uppercase"
+        >Our Process</span
+      >
+      <h2
+        class="text-3xl md:text-4xl font-bold text-royal uppercase tracking-tighter"
+      >
+        How We Work
+      </h2>
+      <p class="text-sm text-slate-500 mt-4 max-w-xl mx-auto leading-relaxed">
+        Every engagement follows a structured, transparent process designed to
+        give you clarity at every stage.
+      </p>
+    </div>
+
+    <div class="relative">
+      <!-- Connecting line (desktop) -->
+      <div
+        class="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-px bg-slate-200 z-0"
+      ></div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div class="reveal text-center relative z-10">
+          <div
+            class="w-20 h-20 bg-royal rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-royal/10"
+          >
+            <i data-lucide="search" class="w-8 h-8 text-white"></i>
+          </div>
+          <span
+            class="text-[10px] font-black text-accent uppercase tracking-widest mb-2 block"
+            >Step 01</span
+          >
+          <h4
+            class="font-bold text-royal text-sm uppercase tracking-tight mb-3"
+          >
+            Eligibility Check
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Complete the free online quiz to determine if you qualify to start
+            the process.
+          </p>
+        </div>
+        <div class="reveal text-center relative z-10">
+          <div
+            class="w-20 h-20 bg-accent rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-accent/10"
+          >
+            <i data-lucide="calendar-check" class="w-8 h-8 text-white"></i>
+          </div>
+          <span
+            class="text-[10px] font-black text-accent uppercase tracking-widest mb-2 block"
+            >Step 02</span
+          >
+          <h4
+            class="font-bold text-royal text-sm uppercase tracking-tight mb-3"
+          >
+            Strategy Session
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Book a 1-on-1 paid consultation. We map your exact pathway and
+            identify your gaps.
+          </p>
+        </div>
+        <div class="reveal text-center relative z-10">
+          <div
+            class="w-20 h-20 bg-royal rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-royal/10"
+          >
+            <i data-lucide="cog" class="w-8 h-8 text-white"></i>
+          </div>
+          <span
+            class="text-[10px] font-black text-accent uppercase tracking-widest mb-2 block"
+            >Step 03</span
+          >
+          <h4
+            class="font-bold text-royal text-sm uppercase tracking-tight mb-3"
+          >
+            Active Pillar Work
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            We execute your personalised service plan across licensing,
+            language, and placement pillars.
+          </p>
+        </div>
+        <div class="reveal text-center relative z-10">
+          <div
+            class="w-20 h-20 bg-accent rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-accent/10"
+          >
+            <i data-lucide="plane" class="w-8 h-8 text-white"></i>
+          </div>
+          <span
+            class="text-[10px] font-black text-accent uppercase tracking-widest mb-2 block"
+            >Step 04</span
+          >
+          <h4
+            class="font-bold text-royal text-sm uppercase tracking-tight mb-3"
+          >
+            Departure Ready
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Pre-departure briefing complete. You leave with a job, housing plan,
+            and full confidence.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── What We Don't Do ──────────────────────────────────── -->
+<section class="py-20 bg-slate-900">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div class="reveal">
+        <span
+          class="text-amber-400 font-bold tracking-[0.4em] text-[10px] mb-3 block uppercase"
+          >Transparency First</span
+        >
+        <h2
+          class="text-3xl font-bold text-white mb-6 uppercase tracking-tighter"
+        >
+          What We Don't Do
+        </h2>
+        <p class="text-sm text-slate-400 leading-relaxed">
+          We operate with complete transparency. Understanding our limits helps
+          you set realistic expectations and protects you from being misled by
+          anyone — including us.
+        </p>
+      </div>
+      <div class="reveal grid sm:grid-cols-2 gap-4">
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl">
+          <i data-lucide="x-circle" class="w-6 h-6 text-amber-400 mb-3"></i>
+          <h4
+            class="text-white font-bold text-xs uppercase tracking-widest mb-2"
+          >
+            No Visa Guarantees
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            We guide your pathway but we cannot influence embassy decisions.
+          </p>
+        </div>
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl">
+          <i data-lucide="x-circle" class="w-6 h-6 text-amber-400 mb-3"></i>
+          <h4
+            class="text-white font-bold text-xs uppercase tracking-widest mb-2"
+          >
+            No Job Guarantees
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            We prepare and match you — hiring decisions belong to the employer.
+          </p>
+        </div>
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl">
+          <i data-lucide="x-circle" class="w-6 h-6 text-amber-400 mb-3"></i>
+          <h4
+            class="text-white font-bold text-xs uppercase tracking-widest mb-2"
+          >
+            No Legal Advice
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            We are not lawyers. Complex immigration matters require a licensed
+            attorney.
+          </p>
+        </div>
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl">
+          <i data-lucide="x-circle" class="w-6 h-6 text-amber-400 mb-3"></i>
+          <h4
+            class="text-white font-bold text-xs uppercase tracking-widest mb-2"
+          >
+            No Shortcuts
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Every pathway we present is 100% legal. We do not deal in document
+            fraud.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 {% endblock %}

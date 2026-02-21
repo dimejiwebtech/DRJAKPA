@@ -75,4 +75,11 @@ urlpatterns = [
     path('testimonials/<int:pk>/edit/', views.edit_testimonial, name='edit_testimonial'),
     path('testimonials/<int:pk>/delete/', views.delete_testimonial, name='delete_testimonial'),
     # Testimonials
+
+    # Team
+    path('team/', views.team_list, name='team_list'),
+    path('team/add/', views.add_team_member, name='add_team_member'),
+    path('team/<int:pk>/edit/', views.edit_team_member, name='edit_team_member'),
+    path('team/<int:pk>/delete/', views.delete_team_member, name='delete_team_member'),
+    # Team
 ]
