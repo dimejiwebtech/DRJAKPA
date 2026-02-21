@@ -136,11 +136,11 @@
         class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
       >
         <div
-          class="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between"
+          class="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
         >
           <div class="flex items-center gap-3">
             <div
-              class="w-8 h-8 bg-royal rounded-lg flex items-center justify-center"
+              class="w-8 h-8 bg-royal rounded-lg flex items-center justify-center shrink-0"
             >
               <i data-lucide="activity" class="w-4 h-4 text-white"></i>
             </div>
@@ -150,17 +150,50 @@
               >
                 Traffic Overview
               </h3>
-              <p class="text-[8px] font-bold text-slate-400 uppercase">
-                Last 7 Days
+              <p
+                class="text-[8px] font-bold text-slate-400 uppercase"
+                id="dash-traffic-sublabel"
+              >
+                This Week
               </p>
             </div>
           </div>
-          <a
-            href="{% url 'analytics:traffic_stats' %}"
-            class="text-[9px] font-black text-royal hover:text-accent uppercase tracking-widest transition-colors"
-          >
-            View Full Analytics →
-          </a>
+          <div class="flex items-center gap-2">
+            <div
+              class="flex items-center gap-0.5 bg-slate-100 rounded-lg p-0.5"
+            >
+              <button
+                data-dash-period="today"
+                class="dash-period-pill px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-royal transition-all"
+              >
+                Today
+              </button>
+              <button
+                data-dash-period="week"
+                class="dash-period-pill px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-royal transition-all"
+              >
+                Week
+              </button>
+              <button
+                data-dash-period="month"
+                class="dash-period-pill px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-royal transition-all"
+              >
+                Month
+              </button>
+              <button
+                data-dash-period="year"
+                class="dash-period-pill px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-royal transition-all"
+              >
+                Year
+              </button>
+            </div>
+            <a
+              href="{% url 'analytics:traffic_stats' %}"
+              class="text-[9px] font-black text-royal hover:text-accent uppercase tracking-widest transition-colors whitespace-nowrap"
+            >
+              Full →
+            </a>
+          </div>
         </div>
         <div class="p-6 sm:p-10">
           <div class="h-72 w-full">
@@ -463,8 +496,38 @@
     });
   }
 
+  let currentDashPeriod = 'week';
+
+  document.querySelectorAll('.dash-period-pill').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      currentDashPeriod = btn.dataset.dashPeriod;
+      document.querySelectorAll('.dash-period-pill').forEach((b) => {
+        const active = b.dataset.dashPeriod === currentDashPeriod;
+        b.className =
+          'dash-period-pill px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest transition-all ' +
+          (active
+            ? 'bg-white text-royal shadow-sm'
+            : 'text-slate-400 hover:text-royal');
+      });
+      const labels = {
+        today: 'Today',
+        week: 'This Week',
+        month: 'This Month',
+        year: 'This Year',
+      };
+      const sub = document.getElementById('dash-traffic-sublabel');
+      if (sub) sub.textContent = labels[currentDashPeriod] || '';
+      loadDashboardTrafficData();
+    });
+  });
+  // Activate default pill
+  const defaultPill = document.querySelector('[data-dash-period="week"]');
+  if (defaultPill)
+    defaultPill.className =
+      'dash-period-pill px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest transition-all bg-white text-royal shadow-sm';
+
   function loadDashboardTrafficData() {
-    fetch('/dashboard/analytics/traffic-data/?period=week')
+    fetch(`/dashboard/analytics/traffic-data/?period=${currentDashPeriod}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.chart_data && data.chart_data.length > 0) {
@@ -479,8 +542,9 @@
           if (data.total_views !== undefined) {
             document.getElementById('total-views-stat').textContent =
               data.total_views.toLocaleString();
-            document.getElementById('total-visitors-stat').textContent =
-              Math.floor(data.total_views * 0.6).toLocaleString();
+            document.getElementById('total-visitors-stat').textContent = (
+              data.unique_visitors ?? Math.floor(data.total_views * 0.55)
+            ).toLocaleString();
           }
         } else {
           useFallbackData();
